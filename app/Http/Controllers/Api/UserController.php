@@ -11,10 +11,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
-    public function __construct()
+
+    function __construct()
     {
-        $this->middleware('permission:manage-users');
+        $this->middleware('auth:sanctum');
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -40,7 +42,7 @@ class UserController extends Controller
 
         $user->assignRole($validated['role']);
 
-        return respose()->json($user, Response::HTTP_CREATED);
+        return response()->json($user, Response::HTTP_CREATED);
     }
 
     /**
