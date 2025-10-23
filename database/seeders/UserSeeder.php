@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
@@ -17,15 +18,16 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::factory()->create([
-            'id' => Str::uuid(),
             'name' => 'Test User',
             'email' => 'test@example.com',
+            'no_telp' => '081234567890',
             'password' => bcrypt('Password123!'),
         ]);
 
         $ownerUser = User::factory()->create([
             'name' => 'Owner',
             'email' => 'owner@example.com',
+            'no_telp' => '081234567890',
             'password' => Hash::make('Password123!')
         ]);
 
@@ -34,6 +36,7 @@ class UserSeeder extends Seeder
         $supplierUser = User::factory()->create([
             'name' => 'Supplier',
             'email' => 'supplier@example.com',
+            'no_telp' => '081234567890',
             'password' => Hash::make('Password123!')
             
         ]);
@@ -42,6 +45,7 @@ class UserSeeder extends Seeder
         $adminUser = User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@example.com',
+            'no_telp' => '081234567890',
             'password' => Hash::make('Password123!')
             
         ]);

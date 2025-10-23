@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password;
 
+
 class StoreUserRequest extends FormRequest
 {
     /**
@@ -94,6 +95,7 @@ class StoreUserRequest extends FormRequest
             'email' => $this->input('email'),
             'password' => $this->input('password'),
             'created_by' => $this->input('created_by'),
+            'role' => $this->input('role'),
         ];
     }
 }
