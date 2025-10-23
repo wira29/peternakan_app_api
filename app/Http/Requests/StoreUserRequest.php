@@ -51,13 +51,22 @@ class StoreUserRequest extends FormRequest
                 'email',
                 'unique:users,email'
             ],
+            'no_telp' => [
+                'bail',
+                'required',
+                'string',
+            ],
             'password' => [
                 'bail',
                 'required',
                 'string',
-                'confirmed',
                 Password::min(8)->mixedCase()->letters()->numbers()->symbols(),
-            ]
+            ],
+            'created_by' => [
+                'bail',
+                'nullable',
+                'uuid',
+            ],
         ];
     }
 
@@ -77,9 +86,11 @@ class StoreUserRequest extends FormRequest
             'email.email' => 'Email must be a valid email address.',
             'email.unique' => 'This email is already in use.',
 
+            'no_telp.required' => 'No Telepon is required.',
+            'no_telp.string' => 'No Telepon must be a valid text.',
+
             'password.required' => 'Password is required.',
             'password.string' => 'Password must be a valid text.',
-            'password.confirmed' => 'Password confirmation does not match.',
             'password.min' => 'Password must be at least 8 characters long.',
             'password.mixedCase' => 'Password must contain both uppercase and lowercase letters.',
             'password.letters' => 'Password must contain at least one letter.',
