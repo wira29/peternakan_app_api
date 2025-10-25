@@ -91,7 +91,7 @@ class UserController extends Controller
     {
         $user = User::withTrashed()->findOrFail($id);
         if ($user->deleted_at) {
-            $user->email = str_replace('.deleted.', '', $user->email);
+            $user->email = preg_replace('/\.deleted\.\d+$/', '', $user->email);
             $user->saveQuietly();
             $user->restore();
             \Log::info("Restored user with ID: " . $id);
