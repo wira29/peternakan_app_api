@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Hash;
 
 
 class StoreUserRequest extends FormRequest
@@ -19,9 +20,9 @@ class StoreUserRequest extends FormRequest
 
     public function prepareForValidation() : void
     {
-        $user = Auth::user();
+        $user = auth()->user();
         $this->merge([
-            'created_by' => $user->uuid,
+            'created_by' => $user->id,
         ]);
     }
 
@@ -32,6 +33,7 @@ class StoreUserRequest extends FormRequest
      */
     public function rules(): array
     {
+        
         return [
             'name' => [
                 'bail',
@@ -104,9 +106,10 @@ class StoreUserRequest extends FormRequest
         return [
             'name' => $this->input('name'),
             'email' => $this->input('email'),
-            'password' => $this->input('password'),
+            'password' => Hash::make($this->input('password')),
             'created_by' => $this->input('created_by'),
             'role' => $this->input('role'),
+            'no_telp' => $this->input('no_telp'),
         ];
     }
 }
