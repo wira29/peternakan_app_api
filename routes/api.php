@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\LocationController;
-
+use App\Http\Controllers\Api\MaterialController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -23,4 +23,8 @@ Route::middleware('permission:manage-locations')->group(function () {
     Route::apiresource('locations', LocationController::class);
     Route::post('locations/{id}/restore', [LocationController::class, 'restore']);
 });
-// Route::middleware('permission:manage-materials')->apiresource('materials', App\Http\Controllers\Api\MaterialController::class);
+
+Route::middleware('permission:manage-materials')->group(function () {
+    Route::apiresource('materials', MaterialController::class);
+    Route::post('materials/{id}/restore', [MaterialController::class, 'restore']);
+});
