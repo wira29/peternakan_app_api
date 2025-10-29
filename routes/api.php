@@ -28,3 +28,8 @@ Route::middleware('permission:manage-materials')->group(function () {
     Route::apiresource('materials', MaterialController::class);
     Route::post('materials/{id}/restore', [MaterialController::class, 'restore']);
 });
+
+Route::middleware('permission:manage-feeds')->group(function () {
+    Route::apiresource('feeds', \App\Http\Controllers\Api\FeedController::class);
+    Route::post('feeds/{id}/restore', [\App\Http\Controllers\Api\FeedController::class, 'restore']);
+});
