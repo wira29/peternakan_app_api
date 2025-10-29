@@ -19,6 +19,8 @@ Route::middleware('permission:manage-users')->group(function () {
     Route::post('users/{id}/restore', [UserController::class, 'restore']);
 });
 
-Route::middleware('permission:manage-locations')->apiresource('locations', LocationController::class);
-
+Route::middleware('permission:manage-locations')->group(function () {
+    Route::apiresource('locations', LocationController::class);
+    Route::post('locations/{id}/restore', [LocationController::class, 'restore']);
+});
 // Route::middleware('permission:manage-materials')->apiresource('materials', App\Http\Controllers\Api\MaterialController::class);
