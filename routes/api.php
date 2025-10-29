@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\MaterialController;
+use App\Http\Controllers\Api\FeedController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -30,6 +31,6 @@ Route::middleware('permission:manage-materials')->group(function () {
 });
 
 Route::middleware('permission:manage-feeds')->group(function () {
-    Route::apiresource('feeds', \App\Http\Controllers\Api\FeedController::class);
-    Route::post('feeds/{id}/restore', [\App\Http\Controllers\Api\FeedController::class, 'restore']);
+    Route::apiresource('feeds', FeedController::class);
+    Route::post('feeds/{id}/restore', [FeedController::class, 'restore']);
 });
