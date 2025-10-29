@@ -11,6 +11,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class FeedController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('permission:manage-feeds');
+    }
     /**
      * Display a listing of the resource.
      */
