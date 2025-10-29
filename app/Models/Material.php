@@ -20,6 +20,9 @@ class Material extends Model
         'name',
         'stock',
         'unit',
+        'created_by',
+        'updated_by',
+        'deleted_by',
     ];
     protected $hidden = [
         'created_at',
