@@ -50,7 +50,7 @@ class FeedController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateFeedRequest $request, string $id)
     {
         $feed = Feed::findOrFail($id);
         $feed->update($request->getData());

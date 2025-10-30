@@ -8,6 +8,7 @@ use App\Models\Cage;
 use App\Http\Requests\Cage\StoreCageRequest;
 use App\Http\Requests\Cage\UpdateCageRequest;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Log;
 
 class CageController extends Controller
 {
@@ -49,12 +50,37 @@ class CageController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateCageRequest $request, string $id)
     {
-        $cage = Cage::findOrFail($id);
-        $cage->update($request->getData());
-        \Log::info("Updated cage with ID: " . $cage->id);
-        return response()->json($cage, Response::HTTP_OK);
+        try {
+            $validatedData = $request->getData();
+            $cage = Cage::findOrFail($id);
+            $cage->fill($validatedData);
+
+            if (!$cage->isDirty()) {
+                Log::info("No changes detected for cage with ID: " . $id);
+                
+                return response()->json([
+                    'message' => 'No changes detected. The original data is returned.',
+                    'data'    => $cage 
+                ], Response::HTTP_OK);
+            }
+
+            $cage->save();
+            Log::info("Updated cage with ID: " . $cage->id);
+
+            return response()->json([
+                'message' => 'Cage updated successfully.',
+                'data'    => $cage 
+            ], Response::HTTP_OK);
+
+        } catch (\Exception $e) {
+            Log::error("Error updating cage with ID $id: " . $e->getMessage());
+            
+            return response()->json([
+                'message' => 'An error occurred while updating the cage.'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR); 
+        }
     }
 
     /**

@@ -17,10 +17,9 @@ class UpdateCageRequest extends FormRequest
 
     public function prepareForValidation() : void
     {
-        $user = auth()->user();
-        $this->merge([
-            'updated_by' => $user->id,
-        ]);
+        $data = $this->json()->all();
+        $data['updated_by'] = Auth::user()->id;
+        $this->replace($data);
     }
 
     /**
