@@ -19,7 +19,7 @@ class AuthController extends Controller
                 'message' => 'Email dan password wajib diisi'
             ], Response::HTTP_BAD_REQUEST);
         }
-        
+
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
@@ -28,19 +28,13 @@ class AuthController extends Controller
             'email.email' => 'Format email tidak valid',
             'password.required' => 'Password wajib diisi',
         ]);
-
-        if($request->empty('email') || $request->empty('password')) {
-            return response()->json([
-                'message' => 'Email dan password wajib diisi'
-            ], 400); 
-        }
         
         $user = User::where('email', $request->email)->first();
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json([
                 'message' => 'Kredensial tidak valid'
-            ], 401); 
+            ], Response::HTTP_UNAUTHORIZED);
         }
         
         $token = $user->createToken('auth_token')->plainTextToken;

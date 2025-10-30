@@ -24,7 +24,11 @@ class UserController extends Controller
     public function index()
     {
         \Log::info("Fetching all users");
-        return User::with('roles')->get();
+        $users = User::all();
+        return $users->map(function ($user) {
+            $user->roles = $user->roles()->pluck('name');
+            return $user;
+        });
     }
 
     /**
