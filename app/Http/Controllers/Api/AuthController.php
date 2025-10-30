@@ -7,12 +7,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class AuthController extends Controller
 {
     public function login(Request $request)
     {
+        if($request->missing(['email', 'password'])) {
+            return response()->json([
+                'message' => 'Email dan password wajib diisi'
+            ], Response::HTTP_BAD_REQUEST);
+        }
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
@@ -22,6 +28,11 @@ class AuthController extends Controller
             'password.required' => 'Password wajib diisi',
         ]);
 
+        if($request->empty('email') || $request->empty('password')) {
+            return response()->json([
+                'message' => 'Email dan password wajib diisi'
+            ], 400); 
+        }
         
         $user = User::where('email', $request->email)->first();
 
@@ -30,11 +41,7 @@ class AuthController extends Controller
                 'message' => 'Kredensial tidak valid'
             ], 401); 
         }
-
-
-
         
-
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
