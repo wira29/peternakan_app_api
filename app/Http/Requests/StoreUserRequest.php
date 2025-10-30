@@ -64,6 +64,11 @@ class StoreUserRequest extends FormRequest
                 'string',
                 Password::min(8)->mixedCase()->letters()->numbers()->symbols(),
             ],
+            'alamat' => [
+                'bail',
+                'nullable',
+                'string',
+            ],
             'created_by' => [
                 'bail',
                 'nullable',
@@ -97,7 +102,8 @@ class StoreUserRequest extends FormRequest
             'password.mixedCase' => 'Password must contain both uppercase and lowercase letters.',
             'password.letters' => 'Password must contain at least one letter.',
             'password.numbers' => 'Password must contain at least one number.',
-            'password.symbols' => 'Password must contain at least one special character.', 
+            'password.symbols' => 'Password must contain at least one special character.',
+            'alamat.string' => 'Alamat must be a valid text.',
         ];
     }
     
@@ -110,6 +116,7 @@ class StoreUserRequest extends FormRequest
             'created_by' => $this->input('created_by'),
             'role' => $this->input('role'),
             'no_telp' => $this->input('no_telp'),
+            'alamat' => $this->input('alamat'),
         ];
     }
 }

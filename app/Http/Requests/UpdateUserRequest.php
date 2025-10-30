@@ -61,6 +61,11 @@ class UpdateUserRequest extends FormRequest
                 'sometimes',
                 Password::min(8)->mixedCase()->letters()->numbers()->symbols(),
             ],
+            'alamat' => [
+                'bail',
+                'nullable',
+                'string',
+            ],
             'updated_by' => [
                 'bail',
                 'nullable',
@@ -95,6 +100,7 @@ class UpdateUserRequest extends FormRequest
             'password.letters' => 'Password must contain at least one letter.',
             'password.numbers' => 'Password must contain at least one number.',
             'password.symbols' => 'Password must contain at least one special character.', 
+            'alamat.string' => 'Alamat must be a valid text.',
         ];
     }
     
@@ -105,6 +111,7 @@ class UpdateUserRequest extends FormRequest
             'email',
             'no_telp',
             'password',
+            'alamat',
             'updated_by',
         ]);
         

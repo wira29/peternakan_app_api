@@ -28,6 +28,7 @@ class User extends Authenticatable
         'email',
         'password',
         'no_telp',
+        'alamat',
         'created_by',
         'updated_by',
         'deleted_by',
