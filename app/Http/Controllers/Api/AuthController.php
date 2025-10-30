@@ -19,6 +19,7 @@ class AuthController extends Controller
                 'message' => 'Email dan password wajib diisi'
             ], Response::HTTP_BAD_REQUEST);
         }
+        
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
