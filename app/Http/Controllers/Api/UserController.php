@@ -24,6 +24,7 @@ class UserController extends Controller
     public function index()
     {
         \Log::info("Fetching all users");
+
         $users = User::all();
         return $users->map(function ($user) {
             $user->roles = $user->roles()->pluck('name');
@@ -41,6 +42,7 @@ class UserController extends Controller
 
         $user = User::create($request->getData());
         $user->assignRole($validated['role']);
+        $user->roles = $user->roles()->pluck('name');
         \Log::info("Created new user with ID: " . $user->id);
         return response()->json($user, Response::HTTP_CREATED);
     }
@@ -51,8 +53,39 @@ class UserController extends Controller
     public function show(string $id)
     {
         \Log::info("Fetching user with ID: " . $id);
-        $user = User::with('roles')->findOrFail($id);
+        $user = User::findOrFail($id);
+        $user->roles = $user->roles()->pluck('name');
         return response()->json($user, Response::HTTP_OK);
+    }
+
+    public function getCurrentUser(Request $request)
+    {
+        try {
+            $user = $request->user(); 
+            $user->makeHidden(['roles', 'permissions']);
+            $userData = $user->toArray();
+            
+            
+            $userData['roles'] = $user->roles()->pluck('name');
+            $userData['permissions'] = $user->permissions()->pluck('name');
+
+            \Log::info("User retrieved by token", [
+                'user_id' => $user->id,
+                'token_name' => $request->user()->currentAccessToken()->name ?? 'unknown'
+            ]);
+
+            return response()->json($userData, Response::HTTP_OK);
+
+        } catch (\Exception $e) {
+            \Log::error("Failed to retrieve user by token", [
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'message' => 'Failed to retrieve user',
+                'error' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -60,19 +93,53 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, string $id)
     {
-        \Log::info("Raw Request All:", $request->all());
-        $user = User::findOrFail($id);
-        $requestData = $request->getData();
-        \Log::info("Update request data: " . json_encode($requestData));
-        $userData = $user->only(array_keys($requestData)); 
-        $diff = array_diff_assoc($requestData, $userData);
-        if (empty($diff)) {
-            \Log::info("No changes detected for user with ID: " . $id);
+       
+        try{
+            $requestData = $request->all();
+            \Log::info("Update request data: " . json_encode($requestData));
+
+            $rolesData = $requestData['roles'] ?? null;
+            $userDataRequest = array_diff_key($requestData, ['roles' => '']);
+
+            $user = User::findOrFail($id);
+            $userData = $user->only(array_keys($userDataRequest));
+            \Log::info("Existing user data: " . json_encode($userData));
+
+            $currentRoles = $user->roles()->pluck('name')->toArray();
+            \Log::info("Current roles: " . json_encode($currentRoles));
+
+            $userDataDiff = array_diff_assoc($userDataRequest, $userData);
+
+            $rolesChanged = false;
+            if ($rolesData !== null) {
+                $rolesChanged = ($rolesData !== $currentRoles);
+            }
+
+            if (empty($userDataDiff) && !$rolesChanged) {
+                \Log::info("No changes detected for user with ID: " . $id);
+                return response()->json($user, Response::HTTP_OK);
+            }
+
+            if (!empty($userDataDiff)) {
+                $user->update($userDataRequest);
+                \Log::info("Updated user data with ID: " . $id);
+            }
+
+            if ($rolesChanged) {
+                $user->syncRoles($rolesData);
+                \Log::info("Synced roles for user with ID: " . $id);
+            }
+
+            $user->refresh();
+            $user->roles = $user->roles()->pluck('name');
+
+            \Log::info("Successfully updated user with ID: " . $id);
             return response()->json($user, Response::HTTP_OK);
-        }
-        $user->fill($requestData)->save();
-        \Log::info("Updated user with ID: " . $id);
-        return response()->json($user, Response::HTTP_OK);
+            
+        } catch (\Exception $e) {
+            \Log::error("Error fetching user with ID: " . $id . " - " . $e->getMessage());
+            return response()->json(['message' => 'Update failed'], Response::HTTP_NOT_FOUND);
+        } 
     }
 
     /**

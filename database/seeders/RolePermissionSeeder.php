@@ -15,7 +15,7 @@ class RolePermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        // app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        //app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
         $permissions = [
             'manage-users',
             'manage-locations',

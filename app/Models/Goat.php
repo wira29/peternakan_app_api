@@ -11,6 +11,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use app\Enums\GoatOrigin;
 use app\Enums\FemaleCondition;
+use App\Models\User;
 
 class Goat extends Model
 {
@@ -50,5 +51,20 @@ class Goat extends Model
             'origin' => GoatOrigin::class,
             'female_condition' => FemaleCondition::class,
         ];
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function deletedBy()
+    {
+        return $this->belongsTo(User::class, 'deleted_by');
     }
 }

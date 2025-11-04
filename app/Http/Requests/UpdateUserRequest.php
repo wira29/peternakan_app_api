@@ -38,7 +38,7 @@ class UpdateUserRequest extends FormRequest
                 'max:255',
                 'sometimes'
             ],
-            'role' => [
+            'roles' => [
                 'bail',
                 'exists:roles,name',
                 'sometimes'
@@ -81,9 +81,9 @@ class UpdateUserRequest extends FormRequest
             'name.string' => 'User name must be a valid text.',
             'name.max' => 'User name must not exceed 255 characters.',
 
-            'role.required' => 'Role is required.',
-            'role.string' => 'Role must be a valid text',
-            'role.exists' => 'Role must be an existing role',
+            'roles.required' => 'Role is required.',
+            'roles.string' => 'Role must be a valid text',
+            'roles.exists' => 'Role must be an existing role',
 
             'email.required' => 'Email is required.',
             'email.string' => 'Email must be a valid text.',
@@ -112,6 +112,7 @@ class UpdateUserRequest extends FormRequest
             'no_telp',
             'password',
             'alamat',
+            'roles',
             'updated_by',
         ]);
         

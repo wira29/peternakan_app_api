@@ -16,7 +16,11 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::post('/login', [AuthController::class, 'login']);
-Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/user/profile', [UserController::class, 'getCurrentUser']);
+});
 
 Route::middleware('permission:manage-users')->group(function () {
     Route::apiresource('users', UserController::class);

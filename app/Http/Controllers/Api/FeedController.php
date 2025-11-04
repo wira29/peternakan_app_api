@@ -52,10 +52,35 @@ class FeedController extends Controller
      */
     public function update(UpdateFeedRequest $request, string $id)
     {
-        $feed = Feed::findOrFail($id);
-        $feed->update($request->getData());
-        \Log::info("Updated feed with ID: " . $feed->id);
-        return response()->json($feed, Response::HTTP_OK);
+        try {
+            $validatedData = $request->getData();
+            $feed = Feed::findOrFail($id);
+            $feed->fill($validatedData);
+
+            if (!$feed->isDirty()) {
+                Log::info("No changes detected for feed with ID: " . $id);
+
+                return response()->json([
+                    'message' => 'No changes detected. The original data is returned.',
+                    'data'    => $feed
+                ], Response::HTTP_OK);
+            }
+
+            $feed->save();
+            Log::info("Updated feed with ID: " . $feed->id);
+
+            return response()->json([
+                'message' => 'Feed updated successfully.',
+                'data'    => $feed
+            ], Response::HTTP_OK);
+
+        } catch (\Exception $e) {
+            Log::error("Error updating feed with ID $id: " . $e->getMessage());
+
+            return response()->json([
+                'message' => 'An error occurred while updating the feed.'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
