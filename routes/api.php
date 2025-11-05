@@ -53,8 +53,8 @@ Route::middleware('permission:manage-breeds')->group(function () {
 });
 
 Route::middleware('permission:manage-goats')->group(function () {
-    Route::apiresource('goats', GoatController::class);
-    Route::post('goats/{id}/restore', [GoatController::class, 'restore']);
+    Route::apiresource('goats', GoatController::class)->parameters(['goats' => 'goat:code']);
+    Route::post('goats/{goat:code}/restore', [GoatController::class, 'restore']);
 });
 
 

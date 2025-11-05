@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Breed;
+use App\Http\Requests\Breed\StoreBreedRequest;
+use App\Http\Requests\Breed\UpdateBreedRequest;
+use Symfony\Component\HttpFoundation\Response;
 
 class BreedController extends Controller
 {
@@ -45,7 +49,7 @@ class BreedController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateBreedRequest $request, string $id)
     {
         $breed = Breed::findOrFail($id);
         $breed->update($request->getData());

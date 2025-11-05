@@ -21,7 +21,7 @@ class MaterialController extends Controller
     public function index()
     {
         \Log::info("Fetching all materials");
-        return Material::all();
+        return Material::with('createdby', 'updatedby','deletedby')->get();
     }
 
     /**
@@ -42,7 +42,7 @@ class MaterialController extends Controller
     public function show(string $id)
     {
         \Log::info("Fetching material with ID: " . $id);
-        $material = Material::findOrFail($id);
+        $material = Material::with('createdby', 'updatedby','deletedby')->findOrFail($id);
         return response()->json($material, Response::HTTP_OK);
     }
 
@@ -51,7 +51,7 @@ class MaterialController extends Controller
      */
     public function update(UpdateMaterialRequest $request, string $id)
     {
-        $material = Material::findOrFail($id);
+        $material = Material::with('createdby', 'updatedby','deletedby')->findOrFail($id);
         $material->update($request->getData());
         \Log::info("Updated material with ID: " . $material->id);
         return response()->json($material, Response::HTTP_OK);

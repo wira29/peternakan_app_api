@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum GoatOrigin: string
+enum GoatOriginEnum: string
 {
     case BUY = 'buy';
     case BIRTH = 'birth';

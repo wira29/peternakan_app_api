@@ -22,7 +22,7 @@ class FeedController extends Controller
     public function index()
     {
         \Log::info("Fetching all feeds");
-        return Feed::all();
+        return Feed::with('createdby', 'updatedby','deletedby')->get();
     }
 
     /**
@@ -43,7 +43,7 @@ class FeedController extends Controller
     public function show(string $id)
     {
         \Log::info("Fetching feed with ID: " . $id);
-        $feed = Feed::findOrFail($id);
+        $feed = Feed::with('createdby', 'updatedby','deletedby')->findOrFail($id);
         return response()->json($feed, Response::HTTP_OK);
     }
 
@@ -54,11 +54,11 @@ class FeedController extends Controller
     {
         try {
             $validatedData = $request->getData();
-            $feed = Feed::findOrFail($id);
+            $feed = Feed::with('createdby', 'updatedby','deletedby')->findOrFail($id);
             $feed->fill($validatedData);
 
             if (!$feed->isDirty()) {
-                Log::info("No changes detected for feed with ID: " . $id);
+                \Log::info("No changes detected for feed with ID: " . $id);
 
                 return response()->json([
                     'message' => 'No changes detected. The original data is returned.',
@@ -67,7 +67,7 @@ class FeedController extends Controller
             }
 
             $feed->save();
-            Log::info("Updated feed with ID: " . $feed->id);
+            \Log::info("Updated feed with ID: " . $feed->id);
 
             return response()->json([
                 'message' => 'Feed updated successfully.',
@@ -75,7 +75,7 @@ class FeedController extends Controller
             ], Response::HTTP_OK);
 
         } catch (\Exception $e) {
-            Log::error("Error updating feed with ID $id: " . $e->getMessage());
+            \Log::error("Error updating feed with ID $id: " . $e->getMessage());
 
             return response()->json([
                 'message' => 'An error occurred while updating the feed.'

@@ -2,22 +2,27 @@
 
 namespace App\Models;
 
+use app\Enums\FemaleCondition;
+use App\Enums\GoatOriginEnum;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use app\Enums\GoatOrigin;
-use app\Enums\FemaleCondition;
-use App\Models\User;
 
 class Goat extends Model
 {
-    use HasFactory, Notifiable, HasRoles, HasApiTokens, HasUuids, SoftDeletes;
+    use HasApiTokens, HasFactory, HasRoles, HasUuids, Notifiable, SoftDeletes;
 
     protected $guard_name = 'api';
+
+    protected $primaryKey = 'code';
+
+    public $incrementing = false;
+
+    protected $keyType = 'string';
 
     protected $fillable = [
         'code',
@@ -36,7 +41,7 @@ class Goat extends Model
         'remarks',
         'created_by',
         'updated_by',
-        'deleted_by'
+        'deleted_by',
     ];
 
     protected $hidden = [
@@ -48,23 +53,39 @@ class Goat extends Model
     protected function casts(): array
     {
         return [
-            'origin' => GoatOrigin::class,
+            'origin' => GoatOriginEnum::class,
             'female_condition' => FemaleCondition::class,
         ];
     }
 
+    public function breed(){
+        return $this->belongsTo(Breed::class);
+    }
+
+    public function cage(){
+        return $this->belongsTo(Cage::class);
+    }
+
+    public function father(){
+        return $this->belongsTo(Goat::class, 'father_id','code');
+    }
+
+    public function mother(){
+        return $this->belongsTo(Goat::class, 'mother_id','code');
+    }
+
     public function createdBy()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'created_by')->select(['id', 'name']);
     }
 
     public function updatedBy()
     {
-        return $this->belongsTo(User::class, 'updated_by');
+        return $this->belongsTo(User::class, 'updated_by')->select(['id', 'name']);
     }
 
     public function deletedBy()
     {
-        return $this->belongsTo(User::class, 'deleted_by');
+        return $this->belongsTo(User::class, 'deleted_by')->select(['id', 'name']);
     }
 }

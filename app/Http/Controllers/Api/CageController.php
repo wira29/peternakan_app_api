@@ -22,7 +22,7 @@ class CageController extends Controller
     public function index()
     {
         \Log::info("Fetching all cages");
-        return Cage::all();
+        return Cage::with('createdby', 'updatedby','deletedby')->get();
     }
 
     /**
@@ -43,7 +43,7 @@ class CageController extends Controller
     public function show(string $id)
     {
         \Log::info("Fetching cage with ID: " . $id);
-        $cage = Cage::findOrFail($id);
+        $cage = Cage::with('createdby', 'updatedby','deletedby')->findOrFail($id);
         return response()->json($cage, Response::HTTP_OK);
     }
 
