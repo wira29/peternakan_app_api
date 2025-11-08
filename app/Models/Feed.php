@@ -21,6 +21,7 @@ class Feed extends Model
         'name',
         'stock',
         'unit',
+        'price',
         'created_by',
         'updated_by',
         'deleted_by',

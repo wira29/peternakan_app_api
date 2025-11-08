@@ -31,6 +31,7 @@ class UpdateFeedRequest extends FormRequest
             'name' => 'bail|required|string|max:255|sometimes',
             'stock' => 'bail|required|integer|min:0|sometimes',
             'unit' => 'bail|required|string|max:100|sometimes',
+            'price'=> 'bail|nullable|integer|min:0|sometimes',
         ];
     }
 
@@ -43,11 +44,13 @@ class UpdateFeedRequest extends FormRequest
             'stock.min' => 'Stock must be at least 0.',
             'unit.string' => 'Unit must be a string.',
             'unit.max' => 'Unit must not exceed 100 characters.',
+            'price.integer' => 'Price must be an integer.',
+            'price.min' => 'Price must be at least 0.',
         ];
     }
 
     public function getData(): array
     {
-        return $this->only(['name', 'stock', 'unit', 'updated_by']);
+        return $this->only(['name', 'stock', 'unit', 'price', 'updated_by']);
     }
 }

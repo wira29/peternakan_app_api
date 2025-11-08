@@ -34,6 +34,7 @@ class StoreFeedRequest extends FormRequest
             'name' => 'bail|required|string|max:255',
             'stock' => 'bail|required|integer|min:0',
             'unit' => 'bail|required|string|max:100',
+            'price' => 'bail|nullable|integer|min:0',
         ];
     }
     public function messages(): array
@@ -48,11 +49,14 @@ class StoreFeedRequest extends FormRequest
             'unit.required' => 'Unit is required.',
             'unit.string' => 'Unit must be a string.',
             'unit.max' => 'Unit must not exceed 100 characters.',
+            'price.integer' => 'Price must be an integer.',
+            'price.min' => 'Price must be at least 0.',
+            
         ];
     }
 
     public function getData(): array
     {
-        return $this->only(['name', 'stock', 'unit', 'created_by']);
+        return $this->only(['name', 'stock', 'unit', 'price', 'created_by']);
     }
 }

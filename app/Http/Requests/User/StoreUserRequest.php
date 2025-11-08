@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Hash;
 
-class UpdateUserRequest extends FormRequest
+
+class StoreUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -18,9 +20,10 @@ class UpdateUserRequest extends FormRequest
 
     public function prepareForValidation() : void
     {
-        $data = $this->json()->all();
-        $data['updated_by'] = Auth::user()->id;
-        $this->replace($data);
+        $user = auth()->user();
+        $this->merge([
+            'created_by' => $user->id,
+        ]);
     }
 
     /**
@@ -30,35 +33,35 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules(): array
     {
-        \Log::info("Request JSON:", $this->json()->all());
+        
         return [
-             'name' => [
+            'name' => [
                 'bail',
+                'required',
                 'string',
                 'max:255',
-                'sometimes'
             ],
-            'roles' => [
+            'role' => [
                 'bail',
-                'exists:roles,name',
-                'sometimes'
+                'required',
+                'exists:roles,name'
             ],
             'email' => [
                 'bail',
+                'required',
                 'string',
                 'email',
-                'unique:users,email',
-                'sometimes'
+                'unique:users,email'
             ],
             'no_telp' => [
                 'bail',
+                'required',
                 'string',
-                'sometimes'
             ],
             'password' => [
                 'bail',
+                'required',
                 'string',
-                'sometimes',
                 Password::min(8)->mixedCase()->letters()->numbers()->symbols(),
             ],
             'alamat' => [
@@ -66,7 +69,7 @@ class UpdateUserRequest extends FormRequest
                 'nullable',
                 'string',
             ],
-            'updated_by' => [
+            'created_by' => [
                 'bail',
                 'nullable',
                 'uuid',
@@ -81,9 +84,9 @@ class UpdateUserRequest extends FormRequest
             'name.string' => 'User name must be a valid text.',
             'name.max' => 'User name must not exceed 255 characters.',
 
-            'roles.required' => 'Role is required.',
-            'roles.string' => 'Role must be a valid text',
-            'roles.exists' => 'Role must be an existing role',
+            'role.required' => 'Role is required.',
+            'role.string' => 'Role must be a valid text',
+            'role.exists' => 'Role must be an existing role',
 
             'email.required' => 'Email is required.',
             'email.string' => 'Email must be a valid text.',
@@ -99,29 +102,21 @@ class UpdateUserRequest extends FormRequest
             'password.mixedCase' => 'Password must contain both uppercase and lowercase letters.',
             'password.letters' => 'Password must contain at least one letter.',
             'password.numbers' => 'Password must contain at least one number.',
-            'password.symbols' => 'Password must contain at least one special character.', 
+            'password.symbols' => 'Password must contain at least one special character.',
             'alamat.string' => 'Alamat must be a valid text.',
         ];
     }
     
     public function getData(): array
     {
-        $data = $this->only([
-            'name',
-            'email',
-            'no_telp',
-            'password',
-            'alamat',
-            'roles',
-            'updated_by',
-        ]);
-        
-        if (isset($data['password'])) {
-            $data['password'] = bcrypt($data['password']);
-        }
-
-        return $data;
+        return [
+            'name' => $this->input('name'),
+            'email' => $this->input('email'),
+            'password' => Hash::make($this->input('password')),
+            'created_by' => $this->input('created_by'),
+            'role' => $this->input('role'),
+            'no_telp' => $this->input('no_telp'),
+            'alamat' => $this->input('alamat'),
+        ];
     }
 }
-
-

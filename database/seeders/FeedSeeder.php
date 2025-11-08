@@ -17,12 +17,14 @@ class FeedSeeder extends Seeder
                 'name' => 'Pakan Kambing Fermentasi',
                 'stock' => 100,
                 'unit' => 'kg',
+                'price'=> 10010
             ],
             
             [
                 'name' => 'Pakan Domba Konsentrat',
                 'stock' => 140,
                 'unit' => 'kg',
+                'price'=> 2300000
             ],
         ];
 
