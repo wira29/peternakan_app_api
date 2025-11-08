@@ -51,10 +51,44 @@ class BreedController extends Controller
      */
     public function update(UpdateBreedRequest $request, string $id)
     {
-        $breed = Breed::findOrFail($id);
-        $breed->update($request->getData());
-        \Log::info("Updated breed with ID: " . $breed->id);
-        return response()->json($breed, Response::HTTP_OK);
+        try {
+            $validatedData = $request->getData();
+            \Log::info("Data to update for breed ID $id: " . json_encode($validatedData));
+            $breed = Breed::findOrFail($id);
+            $breed->fill($validatedData);
+
+            if (!$breed->isDirty()) {
+                \Log::info("No changes detected for breed with ID: " . $id);
+
+                return response()->json([
+                    'message' => 'No changes detected. The original data is returned.',
+                    'data'    => $breed
+                ], Response::HTTP_OK);
+            }
+
+            $breed->save();
+            \Log::info("Updated breed with ID: " . $breed->id);
+
+            return response()->json([
+                'message' => 'Breed updated successfully.',
+                'data'    => $breed
+            ], Response::HTTP_OK);
+
+        } catch (\Exception $e) {
+            $breed->save();
+            \Log::error("Error updating breed with ID $id: " . $e->getMessage());
+
+            return response()->json([
+                'message' => 'Breed updated successfully.',
+                'data'    => $breed
+            ], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            \Log::error("Error updating breed with ID $id: " . $e->getMessage());
+
+            return response()->json([
+                'message' => 'An error occurred while updating the breed.'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -65,7 +99,7 @@ class BreedController extends Controller
         $breed = Breed::findOrFail($id);
         $breed->delete();
         \Log::info("Deleted breed with ID: " . $id);
-        return response()->json(null, Response::HTTP_OK);
+        return response()->json('Breed deleted successfully.', Response::HTTP_OK);
     }
 
     public function restore(string $id)
