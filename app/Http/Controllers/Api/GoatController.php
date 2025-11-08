@@ -46,11 +46,16 @@ class GoatController extends Controller
      */
     public function store(StoreGoatRequest $request)
     {
-        $validated = $request->validated();
-
+        $validated = $request->getData();
+        \Log::info("Data to create goat: " . json_encode($validated));
         $goat = Goat::create($validated);
+
         \Log::info("Created new goat with ID: " . $goat->code);
-        return response()->json($goat, Response::HTTP_CREATED);
+        return $this->sendResponse(
+            new GoatResource($goat),
+            'Goat created successfully.',
+            Response::HTTP_CREATED
+        );
     }
 
     /**
@@ -60,7 +65,10 @@ class GoatController extends Controller
     {
         \Log::info("Fetching goat with ID: " . $code);
         $goat = Goat::findOrFail($code);
-        return response()->json($goat, Response::HTTP_OK);
+        return $this->sendResponse(
+            new GoatResource($goat),
+            'Goat retrieved successfully.'
+        );
     }
 
     /**

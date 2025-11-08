@@ -12,6 +12,6 @@ class GoatSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        
     }
 }

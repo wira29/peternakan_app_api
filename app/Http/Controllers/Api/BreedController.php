@@ -29,7 +29,7 @@ class BreedController extends Controller
      */
     public function store(StoreBreedRequest $request)
     {
-        $validated = $request->validated();
+        $validated = $request->getData();
 
         $breed = Breed::create($validated);
         \Log::info("Created new breed with ID: " . $breed->id);

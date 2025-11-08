@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use app\Enums\FemaleCondition;
+use App\Enums\FemaleConditionEnum;
 use App\Enums\GoatOriginEnum;
+use App\Enums\GoatGender;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+
 
 class Goat extends Model
 {
@@ -28,6 +30,7 @@ class Goat extends Model
         'code',
         'breed_id',
         'cage_id',
+        'location_id',
         'father_id',
         'mother_id',
         'origin',
@@ -54,7 +57,8 @@ class Goat extends Model
     {
         return [
             'origin' => GoatOriginEnum::class,
-            'female_condition' => FemaleCondition::class,
+            'female_condition' => FemaleConditionEnum::class,
+            'gender' => GoatGender::class,
         ];
     }
 

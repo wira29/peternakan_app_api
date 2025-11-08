@@ -2,11 +2,14 @@
 
 namespace App\Http\Requests\Goat;
 
+use App\Enums\GoatOriginEnum;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Enums\GoatGender;
 use App\Enums\GoatOrigin;
 use App\Enums\FemaleCondition;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rules\Enum;
+use App\Models\Cage;
 
 class StoreGoatRequest extends FormRequest
 {
@@ -21,8 +24,11 @@ class StoreGoatRequest extends FormRequest
     public function prepareForValidation(): void
     {
         $user = auth()->user();
+        $cage = $this->input('cage_id');
+        $location_id = Cage::where('id', $cage)->value('location_id');
         $this->merge([
             'created_by' => $user->id,
+            'location_id' => $location_id,
         ]);
     }
 
@@ -37,16 +43,33 @@ class StoreGoatRequest extends FormRequest
             'code' => 'bail|required|string|max:100|unique:goats,code',
             'breed_id' => 'bail|required|exists:breeds,id',
             'cage_id' => 'bail|required|exists:cages,id',
+            'location_id'=> 'bail|required|exists:locations,id',
             'father_id' => 'bail|nullable|exists:goats,id',
             'mother_id' => 'bail|nullable|exists:goats,id',
-            'origin' => 'bail|required|string|max:255|enum:' . GoatOrigin::class,
+            'origin' => [
+                            'bail',
+                            'required',
+                            'string',
+                            'max:255',
+                            new Enum(GoatOriginEnum::class)
+                        ],
             'color' => 'bail|nullable|string|max:100',
-            'gender' => 'bail|required|enum:' . GoatGender::class,
-            'date' => 'bail|required|date',
+            'gender' => [
+                            'bail',
+                            'required',
+                            new Enum(GoatGender::class) // <-- Gunakan sebagai objek
+                        ],
+            'date' => 'bail|required|date_format:Y-m-d',
             'price' => 'bail|nullable|numeric|min:0',
-            'female_condition' => 'bail|nullable|string|max:255|enum:' . FemaleCondition::class,
-            'is_breeder' => 'bail|required|boolean',
-            'is_qurbani' => 'bail|required|boolean',
+            'female_condition' => [
+                            'bail',
+                            'nullable',
+                            'string',
+                            'max:255',
+                            new Enum(FemaleCondition::class)
+                        ],
+            'is_breeder' => 'bail|nullable|boolean',
+            'is_qurbani' => 'bail|nullable|boolean',
             'remarks' => 'bail|nullable|string|max:500',
         ];
     }
@@ -90,6 +113,7 @@ class StoreGoatRequest extends FormRequest
             'code',
             'breed_id',
             'cage_id',
+            'location_id',
             'father_id',
             'mother_id',
             'origin',

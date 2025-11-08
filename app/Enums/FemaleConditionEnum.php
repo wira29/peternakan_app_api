@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum FemaleCondition: string
+enum FemaleConditionEnum: string
 {
     case NORMAL = 'normal';
     case MATED = 'mated';
