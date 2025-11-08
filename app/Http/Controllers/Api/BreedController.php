@@ -42,7 +42,7 @@ class BreedController extends Controller
     public function show(string $id)
     {
         \Log::info("Fetching breed with ID: " . $id);
-        $breed = Breed::findOrFail($id);
+        $breed = Breed::with('createdby', 'updatedby','deletedby')->findOrFail($id);
         return response()->json($breed, Response::HTTP_OK);
     }
 
@@ -65,7 +65,7 @@ class BreedController extends Controller
         $breed = Breed::findOrFail($id);
         $breed->delete();
         \Log::info("Deleted breed with ID: " . $id);
-        return response()->json(null, Response::HTTP_NO_CONTENT);
+        return response()->json(null, Response::HTTP_OK);
     }
 
     public function restore(string $id)

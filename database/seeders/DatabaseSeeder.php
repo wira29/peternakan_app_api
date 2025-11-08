@@ -21,6 +21,11 @@ class DatabaseSeeder extends Seeder
             // RolePermissionSeeder::class,
             UserSeeder::class,
             LocationSeeder::class,
+            MaterialSeeder::class,
+            BreedSeeder::class,
+            CageSeeder::class,
+            FeedSeeder::class,
+            GoatSeeder::class,
         ]);
         
     }
