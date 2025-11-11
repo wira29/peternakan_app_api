@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\FeedController;
 use App\Http\Controllers\Api\CageController;
 use App\Http\Controllers\Api\BreedController;
 use App\Http\Controllers\Api\GoatController;
+use App\Http\Controllers\Api\BlendTransactionController;
+use App\Http\Controllers\Api\BlendTransactionDetailController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -55,6 +57,12 @@ Route::middleware('permission:manage-breeds')->group(function () {
 Route::middleware('permission:manage-goats')->group(function () {
     Route::apiresource('goats', GoatController::class)->parameters(['goats' => 'goat:code']);
     Route::post('goats/{goat:code}/restore', [GoatController::class, 'restore']);
+});
+
+Route::middleware('permission:manage-blend-materials')->group(function () {
+    Route::apiresource('blend-transactions', BlendTransactionController::class);
+    Route::post('blend-transactions/{id}/restore', [BlendTransactionController::class, 'restore']);
+    Route::apiResource('blend-transaction-details', BlendTransactionDetailController::class)->only(['show', 'update']);
 });
 
 

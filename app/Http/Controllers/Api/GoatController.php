@@ -48,7 +48,15 @@ class GoatController extends Controller
     {
         $validated = $request->getData();
         \Log::info("Data to create goat: " . json_encode($validated));
-        $goat = Goat::create($validated);
+        try {
+            $goat = Goat::create($validated);
+        } catch (\Throwable $th) {
+            \Log::error("Failed to create goat: " . $th->getMessage());
+            return $this->sendError(
+                $th->getMessage(),
+                 $th->getCode()
+            );
+        }
 
         \Log::info("Created new goat with ID: " . $goat->code);
         return $this->sendResponse(
