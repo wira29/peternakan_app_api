@@ -31,6 +31,18 @@ class Material extends Model
         'deleted_at',
     ];
 
+    public function increaseStock(int $qyt)
+    {
+        $this->increment('stock',$qyt);
+        \Log::info('Increased material stock for material ID: ' . $this->id . ' by ' . $qyt);
+    }
+
+    public function decreaseStock(int $qyt)
+    {
+        $this->decrement('stock',$qyt);
+        \Log::info('Decreased material stock for material ID: ' . $this->id . ' by ' . $qyt);
+    }
+
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by')->select(['id', 'name']);

@@ -32,6 +32,18 @@ class Feed extends Model
         'deleted_at',
     ];
 
+    public function increaseStock(int $qyt)
+    {
+        $this->increment('stock',$qyt);
+        \Log::info('Increased feed stock for feed ID: ' . $this->feed_id . ' by ' . $this->qty);
+    }
+
+    public function decreaseStock(int $qyt)
+    {
+        $this->decrement('stock',$qyt);
+        \Log::info('Decreased feed stock for feed ID: ' . $this->feed_id . ' by ' . $this->qty);
+    }
+
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by')->select(['id', 'name']);
