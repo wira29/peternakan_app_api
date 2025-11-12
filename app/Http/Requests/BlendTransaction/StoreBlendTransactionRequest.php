@@ -35,6 +35,8 @@ class StoreBlendTransactionRequest extends FormRequest
             'feed_id' => 'bail|required|exists:feeds,id',
             'qty' => 'bail|required|numeric|min:0',
             'materials' => 'bail|required|array',
+            'materials.*.material_id' => 'bail|required|exists:materials,id',
+            'materials.*.qty' => 'bail|required|numeric|min:0',
             'date' => 'bail|required|date',
             'created_by' => 'bail|required|exists:users,id',
         ];
