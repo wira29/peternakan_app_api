@@ -17,7 +17,7 @@ return new class extends Migration
             $table->uuid('feed_id')->constrained('feeds')->onDelete('cascade');
             $table->integer('qty');
             $table->integer('price');
-            $table->integer('total');
+            $table->integer('total',false,true)->default(0);
             $table->uuid('created_by')->nullable();
             $table->uuid('updated_by')->nullable();
             $table->uuid('deleted_by')->nullable();

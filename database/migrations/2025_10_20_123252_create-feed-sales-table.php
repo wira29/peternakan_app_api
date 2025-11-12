@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('feed_sales', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('location_id');
-            $table->integer('total');
+            $table->integer('total',false,true)->default(0);
             $table->date('sale_date');
             $table->uuid('created_by')->nullable();
             $table->uuid('updated_by')->nullable();
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('feed_sales');
     }
 };

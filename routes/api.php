@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\FeedSaleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
@@ -65,4 +66,8 @@ Route::middleware('permission:manage-blend-materials')->group(function () {
     // Route::apiResource('blend-transaction-details', BlendTransactionDetailController::class)->only(['show', 'update']);
 });
 
+Route::middleware('permission:sales-feed')->group(function () {
+    Route::apiresource('feed-sales', FeedSaleController::class);
+    Route::post('feed-sales/{id}/restore', [FeedSaleController::class, 'restore']);
+});
 
