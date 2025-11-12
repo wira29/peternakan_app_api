@@ -43,5 +43,26 @@ class BlendTransaction extends Model
         $this->feed()->increment('stock', $this->qty);
         \Log::info('Increased feed stock for feed ID: ' . $this->feed_id . ' by ' . $this->qty);
     }
+
+    public function rollbackFeedStock()
+    {
+        $this->feed()->decrement('stock', $this->qty);
+        \Log::info('Rollback feed stock for feed ID: ' . $this->feed_id . ' by ' . $this->qty);
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by')->select(['id', 'name']);
+    }
+
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by')->select(['id', 'name']);
+    }
+
+    public function deletedBy()
+    {
+        return $this->belongsTo(User::class, 'deleted_by')->select(['id', 'name']);
+    }
     
 }

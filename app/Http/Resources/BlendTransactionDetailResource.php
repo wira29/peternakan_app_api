@@ -15,6 +15,7 @@ class BlendTransactionDetailResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             'material' => $this->material?->name,
             'qty' => $this->qty,
         ];

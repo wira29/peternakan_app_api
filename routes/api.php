@@ -60,9 +60,9 @@ Route::middleware('permission:manage-goats')->group(function () {
 });
 
 Route::middleware('permission:manage-blend-materials')->group(function () {
-    Route::apiresource('blend-transactions', BlendTransactionController::class);
+    Route::apiresource('blend-transactions', BlendTransactionController::class)->except('update');
     Route::post('blend-transactions/{id}/restore', [BlendTransactionController::class, 'restore']);
-    Route::apiResource('blend-transaction-details', BlendTransactionDetailController::class)->only(['show', 'update']);
+    // Route::apiResource('blend-transaction-details', BlendTransactionDetailController::class)->only(['show', 'update']);
 });
 
 

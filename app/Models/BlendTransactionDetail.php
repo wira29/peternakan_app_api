@@ -47,4 +47,25 @@ class BlendTransactionDetail extends Model
         $this->material->decrement('stock', $this->qty);
         \Log::info('Reduced material stock for material ID: ' . $this->material_id . ' by ' . $this->qty);
     }
+
+    public function rollbackStockMaterial()
+    {
+        $this->material->increment('stock', $this->qty);
+        \Log::info('Rollback material stock for material ID: '. $this->material_id . ' by ' . $this->qty);
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by')->select(['id', 'name']);
+    }
+
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by')->select(['id', 'name']);
+    }
+
+    public function deletedBy()
+    {
+        return $this->belongsTo(User::class, 'deleted_by')->select(['id', 'name']);
+    }
 }

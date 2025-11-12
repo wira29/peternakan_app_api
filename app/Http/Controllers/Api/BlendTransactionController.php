@@ -26,7 +26,7 @@ class BlendTransactionController extends Controller
     public function index()
     {
         $blendTransactions = BlendTransaction::withoutTrashed()
-            ->with(['feed', 'createdBy', 'updatedBy', 'details.material'])
+            ->with(['feed', 'createdBy', 'updatedBy', 'materials'])
             ->latest("updated_at")
             ->get();
         
@@ -84,7 +84,7 @@ class BlendTransactionController extends Controller
     public function show(string $id)
     {
         try {
-            $blendTransaction = BlendTransaction::with(['feed', 'createdBy', 'updatedBy', 'details.material'])
+            $blendTransaction = BlendTransaction::with(['feed', 'createdBy', 'updatedBy', 'materials'])
                 ->findOrFail($id);
             return $this->sendResponse(
                 new BlendTransactionResource($blendTransaction),
@@ -106,8 +106,9 @@ class BlendTransactionController extends Controller
     {
         $validated = $request->getData();
         \Log::info("Data to update blend transaction: " . json_encode($validated));
-        DB::beginTransaction();
+        
         try {
+            DB::beginTransaction();
             $blendTransaction = BlendTransaction::findOrFail($id);
             $blendTransaction->update($validated);
             DB::commit();
@@ -131,12 +132,23 @@ class BlendTransactionController extends Controller
     public function destroy(string $id)
     {
         try {
+            \Log::info('Delete Blend Transaction with id: '. json_encode($id));
+            DB::beginTransaction();
             $blendTransaction = BlendTransaction::findOrFail($id);
+            $materials = $blendTransaction->materials;
+            foreach ($materials as $material) {
+                $material->rollbackStockMaterial();
+                $material->delete();
+                \Log::info('Deleted material ID: ' . $material->id );
+            }
+            $blendTransaction->rollbackFeedStock();
             $blendTransaction->delete();
+            DB::commit();
+            \Log::info('Deleted Blend Transaction success');
             return $this->sendResponse(
                 null,
                 'Successfully deleted blend transaction'
-            );
+            ); 
         } catch (\Throwable $th) {
             \Log::error("Failed to delete blend transaction: " . $th->getMessage());
             return $this->sendError(
@@ -152,14 +164,19 @@ class BlendTransactionController extends Controller
     public function restore(string $id)
     {
         try {
-            $blendTransaction = BlendTransaction::withTrashed()->findOrFail($id);
-            if (!$blendTransaction->trashed()) {
-                return $this->sendError(
-                    'Blend transaction is not deleted.',
-                    400
-                );
+            \Log::info('Restore Blend Transaction with id: '. $id);
+            DB::beginTransaction();
+            $blendTransaction = BlendTransaction::onlyTrashed()->findOrFail($id);
+            $materials = BlendTransactionDetail::onlyTrashed()->where('blend_transaction_id', $blendTransaction->id)->get();
+            
+            foreach ($materials as $material) {
+                $material->restore();
+                \Log::info('Restored material ID: ' . $material->id );
+                $material->reduceStockMaterial();
             }
             $blendTransaction->restore();
+            $blendTransaction->increaseFeedStock();
+            DB::commit();
             return $this->sendResponse(
                 new BlendTransactionResource($blendTransaction),
                 'Successfully restored blend transaction'
