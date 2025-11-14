@@ -14,6 +14,7 @@ class FeedSaleDetail extends Model
 {
     use HasFactory, Notifiable, HasRoles, HasApiTokens, HasUuids, SoftDeletes;
 
+    protected $table = 'feed_sales_details';
     protected $guard_name = 'api';
 
     protected $fillable = [
@@ -39,15 +40,17 @@ class FeedSaleDetail extends Model
     }
 
     public function decreaseFeedStock(){
-        $this->feed()->decreaseStock($this->qty);
+        $this->feed->decreaseStock($this->qty);
     }
 
     public function increaseFeedStock(){
-        $this->feed()->increaseStock($this->qty);
+        $this->feed->increaseStock($this->qty);
     }
 
     public function calculateTotal(){
         $this->total = $this->price_per_unit * $this->qty;
+        \Log::info('Calculated total for Feed Sale Detail ID ' . $this->id . ': ' . $this->total . ' from qty ' . $this->qty . ' and price per unit ' . $this->price_per_unit);
+        $this->save();
     }
 
     public function createdBy()

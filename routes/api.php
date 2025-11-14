@@ -66,7 +66,7 @@ Route::middleware('permission:manage-blend-materials')->group(function () {
     // Route::apiResource('blend-transaction-details', BlendTransactionDetailController::class)->only(['show', 'update']);
 });
 
-Route::middleware('permission:sales-feed')->group(function () {
+Route::middleware('permission:sale-feeds')->group(function () {
     Route::apiresource('feed-sales', FeedSaleController::class);
     Route::post('feed-sales/{id}/restore', [FeedSaleController::class, 'restore']);
 });

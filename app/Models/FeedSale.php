@@ -39,6 +39,8 @@ class FeedSale extends Model
 
     public function sumTotal(){
         $this->total = $this->details()->sum('total');
+        \Log::info('Summed total for Feed Sale ID ' . $this->id . ': ' . $this->total);
+        $this->save();
     }
 
     public function createdBy()

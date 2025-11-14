@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Feed\StoreFeedRequest;
+use App\Http\Requests\FeedSale\StoreFeedSaleRequest;
 use App\Http\Resources\FeedSaleResource;
 use App\Models\FeedSale;
 use App\Models\FeedSaleDetail;
@@ -31,7 +31,7 @@ class FeedSaleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreFeedRequest $request)
+    public function store(StoreFeedSaleRequest $request)
     {
         $validated = $request->getData();
         \Log::info('Data Request Create Feed Sale: ' .json_encode($validated));
@@ -40,14 +40,16 @@ class FeedSaleController extends Controller
             $feedSale = FeedSale::create($validated);
             \Log::info('Created Feed Sale: ' .json_encode($feedSale));
             foreach ($validated['feeds'] as $feedData) {
-                $feeds = $feedSale->details()->create([
+                \Log::info('Processing Feed Data: ' . json_encode($feedData));
+                $feeds = FeedSaleDetail::create([
+                    'feed_sale_id' => $feedSale->id,
                     'feed_id' => $feedData['feed_id'],
                     'qty' => $feedData['qty'],
-                    'price' => $feedData['price_per_unit'],
-                    'total' => $feedData['qty'] * $feedData['price_per_unit'],
+                    'price_per_unit' => $feedData['price_per_unit'],
                     'created_by' => $validated['created_by'],
-                ])->updateTotal();
-                $feedSale->details()->decreaseFeedStock();
+                ]);
+                $feeds->calculateTotal();
+                $feeds->decreaseFeedStock();
                 \Log::info('Created Feed Sale Detail: ' .json_encode($feeds));
             }
             $feedSale->sumTotal();

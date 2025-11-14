@@ -32,16 +32,16 @@ class Feed extends Model
         'deleted_at',
     ];
 
-    public function increaseStock(int $qyt)
+    public function increaseStock(int $qty)
     {
-        $this->increment('stock',$qyt);
-        \Log::info('Increased feed stock for feed ID: ' . $this->feed_id . ' by ' . $this->qty);
+        $this->increment('stock',$qty);
+        \Log::info('Increased feed stock for feed ID: ' . $this->id . ' by ' . $qty . ' to ' . $this->stock);
     }
 
-    public function decreaseStock(int $qyt)
+    public function decreaseStock(int $qty)
     {
-        $this->decrement('stock',$qyt);
-        \Log::info('Decreased feed stock for feed ID: ' . $this->feed_id . ' by ' . $this->qty);
+        $this->decrement('stock',$qty);
+        \Log::info('Decreased feed stock for feed ID: ' . $this->id . ' by ' . $qty . ' to ' . $this->stock);
     }
 
     public function createdBy()

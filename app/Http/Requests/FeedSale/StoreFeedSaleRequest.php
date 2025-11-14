@@ -50,6 +50,14 @@ class StoreFeedSaleRequest extends FormRequest
             'sale_date.date' => 'Sale date must be a valid date.',
             'feeds.required' => 'Feed data is required.',
             'feeds.array' => 'Feed data must be an array.',
+            'feeds.*.feed_id.required' => 'Feed ID is required.',
+            'feeds.*.feed_id.exists' => 'The selected feed does not exist.',
+            'feeds.*.price_per_unit.required' => 'Price per unit is required.',
+            'feeds.*.price_per_unit.numeric' => 'Price per unit must be a number.',
+            'feeds.*.price_per_unit.min' => 'Price per unit must be at least 0.',
+            'feeds.*.qty.required' => 'Quantity is required.',
+            'feeds.*.qty.numeric' => 'Quantity must be a number.',
+            'feeds.*.qty.min' => 'Quantity must be at least 0.',
         ];
     }   
     public function getData(): array
