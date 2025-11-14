@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('material_transactions', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('supplier');
-            $table->integer('total');
+            $table->integer('total')->default(0);
             $table->date('transaction_date');
             $table->uuid('created_by')->nullable();
             $table->uuid('updated_by')->nullable();

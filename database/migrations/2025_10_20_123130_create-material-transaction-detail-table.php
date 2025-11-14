@@ -15,9 +15,9 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->uuid('material_transaction_id')->constrained('material_transactions')->onDelete('cascade');
             $table->uuid('material_id')->constrained('materials')->onDelete('cascade');
-            $table->integer('qty');
-            $table->integer('price');
-            $table->integer('total');
+            $table->integer('qty')->default(0);
+            $table->integer('price')->default(0);
+            $table->integer('total')->default(0);
             $table->uuid('created_by')->nullable();
             $table->uuid('updated_by')->nullable();
             $table->uuid('deleted_by')->nullable();

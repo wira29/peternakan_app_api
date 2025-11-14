@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\FeedSaleController;
+use App\Http\Controllers\Api\MaterialTransactionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
@@ -12,7 +13,7 @@ use App\Http\Controllers\Api\CageController;
 use App\Http\Controllers\Api\BreedController;
 use App\Http\Controllers\Api\GoatController;
 use App\Http\Controllers\Api\BlendTransactionController;
-use App\Http\Controllers\Api\BlendTransactionDetailController;
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -69,5 +70,10 @@ Route::middleware('permission:manage-blend-materials')->group(function () {
 Route::middleware('permission:sale-feeds')->group(function () {
     Route::apiresource('feed-sales', FeedSaleController::class);
     Route::post('feed-sales/{id}/restore', [FeedSaleController::class, 'restore']);
+});
+
+Route::middleware('permission:manage-orders-materials')->group(function () {
+    Route::apiresource('material-transactions', MaterialTransactionController::class);
+    Route::post('material-transactions/{id}/restore', [MaterialTransactionController::class, 'restore']);
 });
 
