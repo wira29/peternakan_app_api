@@ -68,12 +68,17 @@ Route::middleware('permission:manage-blend-materials')->group(function () {
 });
 
 Route::middleware('permission:sale-feeds')->group(function () {
-    Route::apiresource('feed-sales', FeedSaleController::class);
+    Route::apiresource('feed-sales', FeedSaleController::class)->except('update');
     Route::post('feed-sales/{id}/restore', [FeedSaleController::class, 'restore']);
 });
 
 Route::middleware('permission:manage-orders-materials')->group(function () {
-    Route::apiresource('material-transactions', MaterialTransactionController::class);
+    Route::apiresource('material-transactions', MaterialTransactionController::class)->except('update');
     Route::post('material-transactions/{id}/restore', [MaterialTransactionController::class, 'restore']);
+});
+
+Route::middleware('permission:buy-feeds')->group(function () {
+    Route::apiresource('feed-purchases', FeedSaleController::class)->except('update');
+    Route::post('feed-purchases/{id}/restore', [FeedSaleController::class, 'restore']);
 });
 

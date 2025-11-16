@@ -3,43 +3,43 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\FeedSale\StoreFeedSaleRequest;
-use App\Http\Resources\FeedSaleResource;
+use App\Http\Resources\FeedPurchaseResource;
 use App\Models\FeedSale;
 use App\Models\FeedSaleDetail;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
-class FeedSaleController extends Controller
+class FeedPurchaseController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $feedSale = FeedSale::withoutTrashed()
+         $feedSale = FeedSale::withoutTrashed()
             ->with(['details', 'createdBy', 'updatedBy'])
             ->latest('sale_date')
-            ->where('location_id', '!=', null)
+            ->where('location_id', '==', null)
+            ->where('created_by','==', auth()->user()->id )
             ->get();
         if ($feedSale->isEmpty()) {
-            return $this->sendResponse([], 'No feed sales data found');
+            return $this->sendResponse([], 'No feed purchase data found');
         }
 
-        return $this->sendResponse(FeedSaleResource::collection($feedSale), 'Feed sales data retrieved successfully');
+        return $this->sendResponse(FeedPurchaseResource::collection($feedSale), 'Feed purchase data retrieved successfully');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreFeedSaleRequest $request)
+    public function store(Request $request)
     {
         $validated = $request->getData();
         \Log::info('Data Request Create Feed Sale: ' .json_encode($validated));
         try {
             DB::beginTransaction();
             $feedSale = FeedSale::create($validated);
-            \Log::info('Created Feed Sale: ' .json_encode($feedSale));
+            \Log::info('Created Feed Purchase: ' .json_encode($feedSale));
             foreach ($validated['feeds'] as $feedData) {
                 \Log::info('Processing Feed Data: ' . json_encode($feedData));
                 $feeds = FeedSaleDetail::create([
@@ -51,16 +51,16 @@ class FeedSaleController extends Controller
                 ]);
                 $feeds->calculateTotal();
                 $feeds->decreaseFeedStock();
-                \Log::info('Created Feed Sale Detail: ' .json_encode($feeds));
+                \Log::info('Created Feed Purchase Detail: ' .json_encode($feeds));
             }
             $feedSale->sumTotal();
-            \Log::info('Calculated Total for Feed Sale ID ' . $feedSale->id . ': ' . $feedSale->total);
+            \Log::info('Calculated Total for Feed Purchase ID ' . $feedSale->id . ': ' . $feedSale->total);
             DB::commit();
             
-            return $this->sendResponse(new FeedSaleResource($feedSale), 'Feed sale created successfully');
+            return $this->sendResponse(new FeedPurchaseResource($feedSale), 'Feed purchase created successfully');
         } catch (\Throwable $th) {
             DB::rollBack();
-            \Log::error('Error creating feed sale: ' . $th->getMessage());
+            \Log::error('Error creating feed purchase: ' . $th->getMessage());
             return $this->sendError($th->getMessage(), $th->getCode() ?: 500);
         }
     }
@@ -72,9 +72,9 @@ class FeedSaleController extends Controller
     {
         try{
             $feedSale = FeedSale::findOrFail($id);
-            return $this->sendResponse(new FeedSaleResource($feedSale), 'Feed sale retrieved successfully');
+            return $this->sendResponse(new FeedPurchaseResource($feedSale), 'Feed purchase retrieved successfully');
         } catch (\Throwable $th) {
-            \Log::error('Error retrieving feed sale: ' . $th->getMessage());
+            \Log::error('Error retrieving feed purchase: ' . $th->getMessage());
             return $this->sendError($th->getMessage(), $th->getCode() ?: 500);
         }
     }
@@ -95,19 +95,19 @@ class FeedSaleController extends Controller
         try{
             DB::beginTransaction();
             $feedSale = FeedSale::findOrFail($id);
-            \Log::info('Delete Feed Sale: ' . json_encode($feedSale));
+            \Log::info('Delete Feed Purchase: ' . json_encode($feedSale));
             $details = $feedSale->details;
-            \Log::info('Feed Sale Details: '. json_encode($details));
+            \Log::info('Feed Purchase Details: '. json_encode($details));
             foreach ($details as $detail) {
-                $detail->increaseFeedStock();
+                // $detail->increaseFeedStock();
                 $detail->delete();
-                \Log::info('Delete Feed Sale Detail: '. json_encode($detail));
+                \Log::info('Delete Feed Purchase Detail: '. json_encode($detail));
             }
             $feedSale->delete();
             DB::commit();
-            return $this->sendResponse(new FeedSaleResource($feedSale),'Successfully deleted feed sale');
+            return $this->sendResponse(new FeedPurchaseResource($feedSale),'Successfully deleted feed purchase');
         }catch (\Throwable $th) {
-            \Log::error('Error deleting feed sale: ' . $th->getMessage());
+            \Log::error('Error deleting feed purchase: ' . $th->getMessage());
             return $this->sendError($th->getMessage(), $th->getCode() ?: 500);
         }
     }
@@ -117,14 +117,14 @@ class FeedSaleController extends Controller
             DB::beginTransaction();
             $feedSale = FeedSale::onlyTrashed()->findOrFail($id);
             $details = FeedSaleDetail::onlyTrashed()->where('feed_sale_id', $feedSale->id)->get();
-            \Log::info('Restore Feed Sale'. json_encode($feedSale));
+            \Log::info('Restore Feed Purchase'. json_encode($feedSale));
             foreach ($details as $detail) {
-                $detail->decreaseFeedStock();
+                // $detail->decreaseFeedStock();
                 $detail->restore();
             }
             $feedSale->restore();
             DB::commit();
-            return $this->sendResponse(new FeedSaleResource($feedSale),'Successfully restored feed sale');
+            return $this->sendResponse(new FeedPurchaseResource($feedSale),'Successfully restored feed purchase');
         }catch (\Throwable $th) {
             DB::rollBack();
             \Log::error("Failed to restore blend transaction: " . $th->getMessage());
