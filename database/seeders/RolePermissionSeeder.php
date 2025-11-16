@@ -15,7 +15,7 @@ class RolePermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        //app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        
         $permissions = [
             'manage-users',
             'manage-locations',
@@ -33,6 +33,7 @@ class RolePermissionSeeder extends Seeder
             'feeding',
             'sale-goats',
             'view-sale-reports',
+            'buy-feeds'
         ];
 
         foreach ($permissions as $permission) {
@@ -49,11 +50,13 @@ class RolePermissionSeeder extends Seeder
             Role::create(['name' => $role, 'guard_name' => 'api']);
         }
 
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+
         $owner = Role::findByName('owner', 'api');
         $owner->syncPermissions(['manage-users', 'manage-locations']);
         $supplier = Role::findByName('supplier', 'api');
         $supplier->givePermissionTo(['manage-materials', 'manage-feeds', 'manage-orders-materials', 'manage-blend-materials', 'sale-feeds']);
         $admin = Role::findByName('admin', 'api');
-        $admin->givePermissionTo(['manage-cages', 'manage-breeds', 'manage-goats', 'view-vaccine-records', 'view-weight-records', 'view-mating-records', 'feeding', 'sale-goats', 'view-sale-reports']);
+        $admin->givePermissionTo(['manage-cages', 'manage-breeds', 'manage-goats', 'view-vaccine-records', 'view-weight-records', 'view-mating-records', 'feeding', 'sale-goats', 'view-sale-reports', 'buy-feeds']);
     }
 }
