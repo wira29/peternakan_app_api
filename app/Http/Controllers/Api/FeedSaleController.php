@@ -19,7 +19,7 @@ class FeedSaleController extends Controller
     {
         $feedSale = FeedSale::withoutTrashed()
             ->with(['details', 'createdBy', 'updatedBy'])
-            ->latest('sale_date')
+            ->latest('date')
             ->where('location_id', '!=', null)
             ->get();
         if ($feedSale->isEmpty()) {

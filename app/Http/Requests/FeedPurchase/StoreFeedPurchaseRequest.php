@@ -11,13 +11,14 @@ class StoreFeedPurchaseRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->user()->can('buy-feeds');
+        return true;
     }
 
     public function prepareForValidation(){
         $user = auth()->user();
         $this->merge([
             'created_by' => $user->id,
+            'location_id' => null,
         ]);
 
     }
@@ -29,7 +30,7 @@ class StoreFeedPurchaseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'buy_date' => 'bail|required|date',
+            'date' => 'bail|required|date',
             'feeds' => 'bail|required|array',
             'feeds.*.feed_id' => 'bail|required|exists:feeds,id',
             'feeds.*.price_per_unit' => 'bail|required|numeric|min:0',
@@ -41,8 +42,8 @@ class StoreFeedPurchaseRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'buy_date.required' => 'Buy date is required.',
-            'buy_date.date' => 'Buy date must be a valid date.',
+            'date.required' => 'Buy date is required.',
+            'date.date' => 'Buy date must be a valid date.',
             'feeds.required' => 'Feed data is required.',
             'feeds.array' => 'Feed data must be an array.',
             'feeds.*.feed_id.required' => 'Feed ID is required.',
@@ -59,7 +60,8 @@ class StoreFeedPurchaseRequest extends FormRequest
     public function getData(): array
     {
         return $this->only([
-            'buy_date',
+            'location_id',
+            'date',
             'feeds',
             'created_by',
         ]);

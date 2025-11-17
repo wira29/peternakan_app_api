@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\CageController;
 use App\Http\Controllers\Api\BreedController;
 use App\Http\Controllers\Api\GoatController;
 use App\Http\Controllers\Api\BlendTransactionController;
+use App\Http\Controllers\Api\FeedPurchaseController;
 
 
 Route::get('/user', function (Request $request) {
@@ -78,7 +79,7 @@ Route::middleware('permission:manage-orders-materials')->group(function () {
 });
 
 Route::middleware('permission:buy-feeds')->group(function () {
-    Route::apiresource('feed-purchases', FeedSaleController::class)->except('update');
-    Route::post('feed-purchases/{id}/restore', [FeedSaleController::class, 'restore']);
+    Route::apiresource('feed-purchases', FeedPurchaseController::class)->except('update');
+    Route::post('feed-purchases/{id}/restore', [FeedPurchaseController::class, 'restore']);
 });
 

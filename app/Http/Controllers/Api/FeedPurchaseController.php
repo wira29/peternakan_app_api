@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\FeedPurchase\StoreFeedPurchaseRequest;
 use App\Http\Resources\FeedPurchaseResource;
 use App\Models\FeedSale;
 use App\Models\FeedSaleDetail;
@@ -18,7 +19,7 @@ class FeedPurchaseController extends Controller
     {
          $feedSale = FeedSale::withoutTrashed()
             ->with(['details', 'createdBy', 'updatedBy'])
-            ->latest('sale_date')
+            ->latest('date')
             ->where('location_id', '==', null)
             ->where('created_by','==', auth()->user()->id )
             ->get();
@@ -32,8 +33,9 @@ class FeedPurchaseController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreFeedPurchaseRequest $request)
     {
+        \Log::info('Store Feed Purchase Request Received');
         $validated = $request->getData();
         \Log::info('Data Request Create Feed Sale: ' .json_encode($validated));
         try {
@@ -50,7 +52,7 @@ class FeedPurchaseController extends Controller
                     'created_by' => $validated['created_by'],
                 ]);
                 $feeds->calculateTotal();
-                $feeds->decreaseFeedStock();
+                //$feeds->decreaseFeedStock();
                 \Log::info('Created Feed Purchase Detail: ' .json_encode($feeds));
             }
             $feedSale->sumTotal();
@@ -116,6 +118,9 @@ class FeedPurchaseController extends Controller
         try{
             DB::beginTransaction();
             $feedSale = FeedSale::onlyTrashed()->findOrFail($id);
+            if (!$feedSale) {
+                return $this->sendError('Feed purchase not found or not deleted', 404);
+            }
             $details = FeedSaleDetail::onlyTrashed()->where('feed_sale_id', $feedSale->id)->get();
             \Log::info('Restore Feed Purchase'. json_encode($feedSale));
             foreach ($details as $detail) {
@@ -127,7 +132,7 @@ class FeedPurchaseController extends Controller
             return $this->sendResponse(new FeedPurchaseResource($feedSale),'Successfully restored feed purchase');
         }catch (\Throwable $th) {
             DB::rollBack();
-            \Log::error("Failed to restore blend transaction: " . $th->getMessage());
+            \Log::error("Failed to restore feed purchase: " . $th->getMessage());
             return $this->sendError(
                 $th->getMessage(),
                 $th->getCode()
