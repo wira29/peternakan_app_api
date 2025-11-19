@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('material_transaction_details', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('material_transaction_id')->constrained('material_transactions')->onDelete('cascade');
-            $table->uuid('material_id')->constrained('materials')->onDelete('cascade');
+            $table->foreignUuid('material_transaction_id')->constrained('material_transactions')->onDelete('cascade');
+            $table->foreignUuid('material_id')->constrained('materials')->onDelete('cascade');
             $table->integer('qty')->default(0);
             $table->integer('price')->default(0);
             $table->integer('total')->default(0);

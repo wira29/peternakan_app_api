@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('cages', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('location_id')->constrained('locations')->onDelete('cascade');
+            $table->foreignUuid('location_id')->constrained('locations')->onDelete('cascade');
             $table->string('name');
             $table->integer('capacity');
             $table->string('remarks')->nullable();

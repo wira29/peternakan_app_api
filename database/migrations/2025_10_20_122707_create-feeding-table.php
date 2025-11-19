@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('feeding', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('cage_id')->constrained('cages')->onDelete('cascade');
+            $table->foreignUuid('cage_id')->constrained('cages')->onDelete('cascade');
             $table->integer('qty');
             $table->date('date');
             $table->uuid('created_by')->nullable();

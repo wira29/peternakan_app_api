@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('goats', function (Blueprint $table) {
             $table->string('code')->primary();
-            $table->uuid('location_id')->constrained('locations')->onDelete('cascade');
-            $table->uuid('cage_id')->constrained('cages')->onDelete('cascade');
-            $table->uuid('breed_id')->constrained('breeds')->onDelete('cascade');
-            $table->uuid('mother_id')->nullable()->constrained('goats')->onDelete('set null');
-            $table->uuid('father_id')->nullable()->constrained('goats')->onDelete('set null');
+            $table->foreignUuid('location_id')->constrained('locations')->onDelete('cascade');
+            $table->foreignUuid('cage_id')->constrained('cages')->onDelete('cascade');
+            $table->foreignUuid('breed_id')->constrained('breeds')->onDelete('cascade');
+            $table->string('mother_id')->nullable();
+            $table->string('father_id')->nullable();
             $table->string('origin')->nullable();
             $table->string('female_condition')->nullable();
             $table->string('color')->nullable();
@@ -32,6 +32,9 @@ return new class extends Migration
             $table->uuid('deleted_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('mother_id')->references('code')->on('goats')->onDelete('set null');
+            $table->foreign('father_id')->references('code')->on('goats')->onDelete('set null');
         });
     }
 

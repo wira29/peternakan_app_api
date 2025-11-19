@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('feed_sales', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('location_id')->nullable(); // if null, means buy data by admin
+            $table->foreignUuid('location_id')->nullable(); // if null, means buy data by admin
             $table->integer('total',false,true)->default(0);
             $table->date('date');
             $table->uuid('created_by')->nullable();

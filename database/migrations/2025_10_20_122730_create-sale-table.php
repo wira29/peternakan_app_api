@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('goat_code')->constrained('goats')->onDelete('cascade');
+            $table->string('goat_code');
             $table->integer('price');
             $table->date('date');
             $table->uuid('created_by')->nullable();
@@ -21,6 +21,8 @@ return new class extends Migration
             $table->uuid('deleted_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('goat_code')->references('code')->on('goats')->onDelete('cascade');
         });
     }
 

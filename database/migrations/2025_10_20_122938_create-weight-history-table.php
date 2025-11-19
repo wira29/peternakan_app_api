@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('weight_histories', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('goat_code')->constrained('goats')->onDelete('cascade');
+            $table->string('goat_code');
             $table->integer('weight');
             $table->integer('height')->nullable();
             $table->date('date');
@@ -22,6 +22,8 @@ return new class extends Migration
             $table->uuid('deleted_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('goat_code')->references('code')->on('goats')->onDelete('cascade');
         });
     }
 

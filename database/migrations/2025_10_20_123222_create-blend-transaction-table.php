@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('blend_transactions', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('feed_id')->constrained('feeds')->onDelete('cascade');
+            $table->foreignUuid('feed_id')->constrained('feeds')->onDelete('cascade');
             $table->integer('qty');
             $table->date('date');
             $table->uuid('created_by')->nullable();
