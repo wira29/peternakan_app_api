@@ -22,6 +22,8 @@ return new class extends Migration
             $table->uuid('deleted_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->unique(['name','unit']);
         });
     }
 
