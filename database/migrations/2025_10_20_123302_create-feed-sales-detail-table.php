@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('feed_sales_details', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('feed_sale_id')->constrained('feed_sales')->onDelete('cascade');
+            $table->foreignUuid('feed_sale_id')->nullable()->default(null)->constrained('feed_sales')->onDelete('set null');
+            $table->foreignUuid('feed_purchase_id')->nullable()->default(null)->constrained('feed_purchases')->onDelete('set null');
             $table->foreignUuid('feed_id')->constrained('feeds')->onDelete('cascade');
             $table->integer('qty')->default(0);
             $table->integer('price_per_unit')->default(0);

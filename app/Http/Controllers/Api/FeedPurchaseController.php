@@ -9,6 +9,7 @@ use App\Models\FeedSale;
 use App\Models\FeedSaleDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\FeedPurchase;
 
 class FeedPurchaseController extends Controller
 {
@@ -40,12 +41,12 @@ class FeedPurchaseController extends Controller
         \Log::info('Data Request Create Feed Sale: ' .json_encode($validated));
         try {
             DB::beginTransaction();
-            $feedSale = FeedSale::create($validated);
-            \Log::info('Created Feed Purchase: ' .json_encode($feedSale));
+            $feedPurchase = FeedPurchase::create($validated);
+            \Log::info('Created Feed Purchase: ' .json_encode($feedPurchase));
             foreach ($validated['feeds'] as $feedData) {
                 \Log::info('Processing Feed Data: ' . json_encode($feedData));
                 $feeds = FeedSaleDetail::create([
-                    'feed_sale_id' => $feedSale->id,
+                    'feed_purchase_id' => $feedPurchase->id,
                     'feed_id' => $feedData['feed_id'],
                     'qty' => $feedData['qty'],
                     'price_per_unit' => $feedData['price_per_unit'],
@@ -55,11 +56,11 @@ class FeedPurchaseController extends Controller
                 //$feeds->decreaseFeedStock();
                 \Log::info('Created Feed Purchase Detail: ' .json_encode($feeds));
             }
-            $feedSale->sumTotal();
-            \Log::info('Calculated Total for Feed Purchase ID ' . $feedSale->id . ': ' . $feedSale->total);
+            $feedPurchase->sumTotal();
+            \Log::info('Calculated Total for Feed Purchase ID ' . $feedPurchase->id . ': ' . $feedPurchase->total);
             DB::commit();
             
-            return $this->sendResponse(new FeedPurchaseResource($feedSale), 'Feed purchase created successfully');
+            return $this->sendResponse(new FeedPurchaseResource($feedPurchase), 'Feed purchase created successfully');
         } catch (\Throwable $th) {
             DB::rollBack();
             \Log::error('Error creating feed purchase: ' . $th->getMessage());

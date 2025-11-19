@@ -31,7 +31,15 @@ class StoreFeedRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'bail|required|string|max:255',
+            'name' => [
+                'bail',
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('feeds')->where(function ($query) {
+                    return $query->where('unit', $this->unit);
+                }),
+            ],
             'stock' => 'bail|required|integer|min:0',
             'unit' => 'bail|required|string|max:100',
             'price' => 'bail|nullable|integer|min:0',
@@ -43,6 +51,7 @@ class StoreFeedRequest extends FormRequest
             'name.required' => 'Feed name is required.',
             'name.string' => 'Feed name must be a string.',
             'name.max' => 'Feed name must not exceed 255 characters.',
+            'name.unique' => 'The combination of feed name and unit must be unique.',
             'stock.required' => 'Stock is required.',
             'stock.integer' => 'Stock must be an integer.',
             'stock.min' => 'Stock must be at least 0.',

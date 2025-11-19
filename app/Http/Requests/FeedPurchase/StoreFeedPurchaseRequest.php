@@ -18,8 +18,9 @@ class StoreFeedPurchaseRequest extends FormRequest
         $user = auth()->user();
         $this->merge([
             'created_by' => $user->id,
-            'location_id' => null,
+            'location_id' => $user->location_id
         ]);
+        
 
     }
     /**
@@ -30,7 +31,8 @@ class StoreFeedPurchaseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date' => 'bail|required|date',
+            'supplier_name' => 'bail|sometimes|string|max:255',
+            'purchase_date' => 'bail|required|date',
             'feeds' => 'bail|required|array',
             'feeds.*.feed_id' => 'bail|required|exists:feeds,id',
             'feeds.*.price_per_unit' => 'bail|required|numeric|min:0',
@@ -42,8 +44,10 @@ class StoreFeedPurchaseRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'date.required' => 'Buy date is required.',
-            'date.date' => 'Buy date must be a valid date.',
+            'supplier_name.string' => 'Supplier name must be a string.',
+            'supplier_name.max' => 'Supplier name may not be greater than 255 characters.',
+            'purchase_date.required' => 'Buy date is required.',
+            'purchase_date.date' => 'Buy date must be a valid date.',
             'feeds.required' => 'Feed data is required.',
             'feeds.array' => 'Feed data must be an array.',
             'feeds.*.feed_id.required' => 'Feed ID is required.',
@@ -61,7 +65,8 @@ class StoreFeedPurchaseRequest extends FormRequest
     {
         return $this->only([
             'location_id',
-            'date',
+            'supplier_name',
+            'purchase_date',
             'feeds',
             'created_by',
         ]);
