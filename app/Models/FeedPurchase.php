@@ -34,7 +34,7 @@ class FeedPurchase extends Model
 
     public function details()
     {
-        return $this->hasMany(FeedSaleDetail::class, 'feed_purchase_id');
+        return $this->hasMany(FeedPurchaseDetail::class, 'feed_purchase_id');
     }
 
     public function sumTotal(){

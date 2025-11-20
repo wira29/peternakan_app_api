@@ -9,17 +9,19 @@ use Spatie\Permission\Traits\HasRoles;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\FeedLocation;
+use App\Models\Feed;
 
-class FeedSaleDetail extends Model
+class FeedPurchaseDetail extends Model
 {
     use HasFactory, Notifiable, HasRoles, HasApiTokens, HasUuids, SoftDeletes;
 
-    protected $table = 'feed_sales_details';
+    protected $table = 'feed_purchase_details';
     protected $guard_name = 'api';
 
     protected $fillable = [
-        'feed_sale_id',
-        'feed_id',
+        'feed_purchase_id',
+        'feed_location_id',
         'qty',
         'price_per_unit',
         'total',
@@ -38,13 +40,17 @@ class FeedSaleDetail extends Model
     {
         return $this->belongsTo(Feed::class, 'feed_id');
     }
+    public function feedLocation()
+    {
+        return $this->belongsTo(FeedLocation::class, 'feed_location_id');
+    }
 
     public function decreaseFeedStock(){
-        $this->feed->decreaseStock($this->qty);
+        $this->feedLocation->decreaseStock($this->qty);
     }
 
     public function increaseFeedStock(){
-        $this->feed->increaseStock($this->qty);
+        $this->feedLocation->increaseStock($this->qty);
     }
 
     public function calculateTotal(){

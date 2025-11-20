@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('feed_sales_details', function (Blueprint $table) {
+        Schema::create('feed_locations', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('feed_sale_id')->nullable()->default(null)->constrained('feed_sales')->onDelete('set null');
-            $table->foreignUuid('feed_id')->constrained('feeds')->onDelete('cascade');
-            $table->integer('qty')->default(0);
-            $table->integer('price_per_unit')->default(0);
-            $table->integer('total',false,true)->default(0);
+            $table->foreignUuid('location_id')->constrained('locations')->onDelete('cascade');
+            $table->foreignUuid('feed_id')->nullable()->constrained('feeds')->onDelete('set null');
+            $table->string('name');
+            $table->integer('stock')->default(0);
+            $table->string('unit');
             $table->uuid('created_by')->nullable();
             $table->uuid('updated_by')->nullable();
             $table->uuid('deleted_by')->nullable();
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('feed_sales_details');
+        Schema::dropIfExists('feed_location');
     }
 };

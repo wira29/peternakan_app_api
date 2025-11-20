@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\FeedPurchase\StoreFeedPurchaseRequest;
 use App\Http\Resources\FeedPurchaseResource;
 use App\Models\FeedSale;
-use App\Models\FeedSaleDetail;
+use App\Models\Feed;
+use App\Models\FeedLocation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\FeedPurchase;
+use App\Models\FeedPurchaseDetail;
 
 class FeedPurchaseController extends Controller
 {
@@ -26,7 +28,7 @@ class FeedPurchaseController extends Controller
             return $this->sendResponse([], 'No feed purchase data found');
         }
 
-        return $this->sendResponse(FeedPurchaseResource::collection($feedSale), 'Feed purchase data retrieved successfully');
+        return $this->sendResponse(FeedPurchaseResource::collection($feedPurchase), 'Feed purchase data retrieved successfully');
     }
 
     /**
@@ -43,15 +45,15 @@ class FeedPurchaseController extends Controller
             \Log::info('Created Feed Purchase: ' .json_encode($feedPurchase));
             foreach ($validated['feeds'] as $feedData) {
                 \Log::info('Processing Feed Data: ' . json_encode($feedData));
-                $feeds = FeedSaleDetail::create([
+                $feedLocation = Feed::find($feedData['feed_id'])->syncToLocation($validated['location_id'], $feedData['qty']);
+                $feeds = FeedPurchaseDetail::create([
                     'feed_purchase_id' => $feedPurchase->id,
-                    'feed_id' => $feedData['feed_id'],
+                    'feed_location_id' => $feedLocation->id,
                     'qty' => $feedData['qty'],
                     'price_per_unit' => $feedData['price_per_unit'],
                     'created_by' => $validated['created_by'],
                 ]);
                 $feeds->calculateTotal();
-                //$feeds->decreaseFeedStock();
                 \Log::info('Created Feed Purchase Detail: ' .json_encode($feeds));
             }
             $feedPurchase->sumTotal();
@@ -100,7 +102,7 @@ class FeedPurchaseController extends Controller
             $details = $feedPurchase->details;
             \Log::info('Feed Purchase Details: '. json_encode($details));
             foreach ($details as $detail) {
-                //$detail->increaseFeedStock();
+                $detail->decreaseFeedStock();
                 $detail->delete();
                 \Log::info('Delete Feed Purchase Detail: '. json_encode($detail));
             }
@@ -116,14 +118,14 @@ class FeedPurchaseController extends Controller
     public function restore(string $id){
         try{
             DB::beginTransaction();
-            $feedSale = FeedSale::onlyTrashed()->findOrFail($id);
+            $feedSale = FeedPurchase::onlyTrashed()->findOrFail($id);
             if (!$feedSale) {
                 return $this->sendError('Feed purchase not found or not deleted', 404);
             }
-            $details = FeedSaleDetail::onlyTrashed()->where('feed_sale_id', $feedSale->id)->get();
+            $details = FeedPurchaseDetail::onlyTrashed()->where('feed_purchase_id', $feedSale->id)->get();
             \Log::info('Restore Feed Purchase'. json_encode($feedSale));
             foreach ($details as $detail) {
-                // $detail->decreaseFeedStock();
+                $detail->increaseFeedStock();
                 $detail->restore();
             }
             $feedSale->restore();
