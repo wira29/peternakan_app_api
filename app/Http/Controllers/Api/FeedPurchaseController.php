@@ -18,13 +18,11 @@ class FeedPurchaseController extends Controller
      */
     public function index()
     {
-         $feedSale = FeedSale::withoutTrashed()
+         $feedPurchase = FeedPurchase::withoutTrashed()
             ->with(['details', 'createdBy', 'updatedBy'])
-            ->latest('date')
-            ->where('location_id', '==', null)
-            ->where('created_by','==', auth()->user()->id )
+            ->latest('purchase_date')
             ->get();
-        if ($feedSale->isEmpty()) {
+        if ($feedPurchase->isEmpty()) {
             return $this->sendResponse([], 'No feed purchase data found');
         }
 
@@ -57,7 +55,7 @@ class FeedPurchaseController extends Controller
                 \Log::info('Created Feed Purchase Detail: ' .json_encode($feeds));
             }
             $feedPurchase->sumTotal();
-            \Log::info('Calculated Total for Feed Purchase ID ' . $feedPurchase->id . ': ' . $feedPurchase->total);
+            \Log::info('Calculated Total for Feed Purchase ID ' . $feedPurchase->id . ': ' . $feedPurchase->total_amount);
             DB::commit();
             
             return $this->sendResponse(new FeedPurchaseResource($feedPurchase), 'Feed purchase created successfully');
@@ -74,8 +72,8 @@ class FeedPurchaseController extends Controller
     public function show(string $id)
     {
         try{
-            $feedSale = FeedSale::findOrFail($id);
-            return $this->sendResponse(new FeedPurchaseResource($feedSale), 'Feed purchase retrieved successfully');
+            $feedPurchase = FeedPurchase::findOrFail($id);
+            return $this->sendResponse(new FeedPurchaseResource($feedPurchase), 'Feed purchase retrieved successfully');
         } catch (\Throwable $th) {
             \Log::error('Error retrieving feed purchase: ' . $th->getMessage());
             return $this->sendError($th->getMessage(), $th->getCode() ?: 500);
@@ -97,18 +95,18 @@ class FeedPurchaseController extends Controller
     {
         try{
             DB::beginTransaction();
-            $feedSale = FeedSale::findOrFail($id);
-            \Log::info('Delete Feed Purchase: ' . json_encode($feedSale));
-            $details = $feedSale->details;
+            $feedPurchase = FeedPurchase::findOrFail($id);
+            \Log::info('Delete Feed Purchase: ' . json_encode($feedPurchase));
+            $details = $feedPurchase->details;
             \Log::info('Feed Purchase Details: '. json_encode($details));
             foreach ($details as $detail) {
-                // $detail->increaseFeedStock();
+                //$detail->increaseFeedStock();
                 $detail->delete();
                 \Log::info('Delete Feed Purchase Detail: '. json_encode($detail));
             }
-            $feedSale->delete();
+            $feedPurchase->delete();
             DB::commit();
-            return $this->sendResponse(new FeedPurchaseResource($feedSale),'Successfully deleted feed purchase');
+            return $this->sendResponse(new FeedPurchaseResource($feedPurchase),'Successfully deleted feed purchase');
         }catch (\Throwable $th) {
             \Log::error('Error deleting feed purchase: ' . $th->getMessage());
             return $this->sendError($th->getMessage(), $th->getCode() ?: 500);

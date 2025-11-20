@@ -16,8 +16,8 @@ class FeedPurchaseResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'buy_date' => $this->sale_date,
-            'total' => $this->total,
+            'purchase_date' => $this->purchase_date,
+            'total' => $this->total_amount,
             'details' => FeedSaleDetailResource::collection($this->details),
             'created_by' => $this->createdBy?->name,
             'updated_by' => $this->updatedBy?->name,

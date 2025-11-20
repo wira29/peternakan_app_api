@@ -19,6 +19,7 @@ class FeedSaleDetail extends Model
 
     protected $fillable = [
         'feed_sale_id',
+        'feed_purchase_id',
         'feed_id',
         'qty',
         'price_per_unit',

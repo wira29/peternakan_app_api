@@ -34,12 +34,13 @@ class FeedPurchase extends Model
 
     public function details()
     {
-        return $this->hasMany(FeedSaleDetail::class, 'feed_sale_id');
+        return $this->hasMany(FeedSaleDetail::class, 'feed_purchase_id');
     }
 
     public function sumTotal(){
-        $this->total = $this->details()->sum('total');
-        \Log::info('Summed total for Feed Sale ID ' . $this->id . ': ' . $this->total);
+        $this->total_amount = $this->details->sum('total');
+        \Log::info('Detail feed :' . json_encode($this->details));
+        \Log::info('Summed total for Feed Purchase ID ' . $this->id . ': ' . $this->total_amount);
         $this->save();
     }
 

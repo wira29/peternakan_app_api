@@ -46,7 +46,8 @@ class UserSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@example.com',
             'no_telp' => '081234567890',
-            'password' => Hash::make('Password123!')
+            'password' => Hash::make('Password123!'),
+            'location_id' => 'a1b2c3d4-1111-2222-3333-a1b2c3d4e5f6'
             
         ]);
         $adminUser->assignRole('admin');
