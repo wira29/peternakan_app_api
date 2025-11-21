@@ -16,7 +16,8 @@ class MaterialTransactionDetailResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'material' => $this->material?->name,
+            'name' => $this->material?->name,
+            'unit' => $this->material?->unit,
             'qty' => $this->qty,
             'price' => $this->price,
             'total' => $this->total,
