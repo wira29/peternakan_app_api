@@ -22,6 +22,7 @@ class FeedSeeder extends Seeder
             ],
             
             [
+                'id' => 'a1b2c3d4-1111-2222-3333-a1b2c3d4e5f9',
                 'name' => 'Pakan Domba Konsentrat',
                 'stock' => 140,
                 'unit' => 'kg',

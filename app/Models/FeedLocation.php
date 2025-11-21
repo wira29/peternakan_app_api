@@ -9,61 +9,42 @@ use Spatie\Permission\Traits\HasRoles;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\User;
 
-class Feed extends Model
+class FeedLocation extends Model
 {
     use HasFactory, Notifiable, HasRoles, HasApiTokens, HasUuids, SoftDeletes;
 
     protected $guard_name = 'api';
 
     protected $fillable = [
+        'feed_id',
+        'location_id',
         'name',
         'stock',
         'unit',
-        'price',
         'created_by',
         'updated_by',
         'deleted_by',
     ];
+
     protected $hidden = [
         'created_at',
         'updated_at',
         'deleted_at',
     ];
 
-    public function syncToLocation(string $locationId, int $qty)
-    {
-        $feedLocation = FeedLocation::where('feed_id', $this->id)
-                            ->where('location_id', $locationId)
-                            ->first();
-        if ($feedLocation) {
-            $feedLocation->increaseStock($qty);
-            $feedLocation->save();
-        } else {
-            $feedLocation = FeedLocation::create([
-                'feed_id' => $this->id,
-                'location_id' => $locationId,
-                'name' => $this->name,
-                'unit' => $this->unit,
-                'stock' => $qty,
-            ]);
-            \Log::info('Created new Feed Location for feed ID: ' . $this->id . ' at location ID: ' . $locationId . ' with initial stock of ' . $qty);
-        }
-
-        return $feedLocation;
-    }
-
     public function increaseStock(int $qty)
     {
         $this->increment('stock',$qty);
-        \Log::info('Increased feed stock for feed ID: ' . $this->id . ' by ' . $qty . ' to ' . $this->stock);
+        $this->save();
+        \Log::info('Increased feed stock for feed location ID: ' . $this->id . ' by ' . $qty . ' to ' . $this->stock);
     }
 
     public function decreaseStock(int $qty)
     {
         $this->decrement('stock',$qty);
-        \Log::info('Decreased feed stock for feed ID: ' . $this->id . ' by ' . $qty . ' to ' . $this->stock);
+        $this->save();
+        \Log::info('Decreased feed stock for feed location ID: ' . $this->id . ' by ' . $qty . ' to ' . $this->stock);
     }
 
     public function createdBy()
@@ -80,4 +61,5 @@ class Feed extends Model
     {
         return $this->belongsTo(User::class, 'deleted_by')->select(['id', 'name']);
     }
+
 }
