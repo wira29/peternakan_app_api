@@ -26,6 +26,8 @@ class DatabaseSeeder extends Seeder
             CageSeeder::class,
             FeedSeeder::class,
             GoatSeeder::class,
+            BlendTransactionSeeder::class,
+            BlendTransactionDetailSeeder::class,
         ]);
         
     }

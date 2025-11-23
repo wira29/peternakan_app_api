@@ -17,7 +17,8 @@ class BlendTransactionResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'feed' => $this->feed?->name,
+            'feed_id'=> $this->feed?->id,
+            'name' => $this->feed?->name,
             'materials' => BlendTransactionDetailResource::collection($this->materials),
             'qty' => $this->qty,
             'date' => $this->date,

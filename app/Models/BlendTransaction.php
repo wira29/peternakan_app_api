@@ -40,14 +40,14 @@ class BlendTransaction extends Model
     }
 
     public function increaseFeedStock(){
-        $this->feed()->increaseStock($this->qty);
+        $this->feed->increaseStock($this->qty);
         \Log::info('Increase feed stock for feed ID: ' . $this->feed_id . ' by ' . $this->qty);
         
     }
 
     public function rollbackFeedStock()
     {
-        $this->feed()->decreaseStock($this->qty);
+        $this->feed->decreaseStock($this->qty);
         \Log::info('Rollback feed stock for feed ID: ' . $this->feed_id . ' by ' . $this->qty);
     }
 
