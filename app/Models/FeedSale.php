@@ -19,7 +19,7 @@ class FeedSale extends Model
 
     protected $fillable = [
         'location_id',
-        'date',
+        'sale_date',
         'total',
         'created_by',
         'updated_by',

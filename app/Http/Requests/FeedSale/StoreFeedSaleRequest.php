@@ -32,7 +32,7 @@ class StoreFeedSaleRequest extends FormRequest
     {
         return [
             'location_id' => 'bail|required|exists:locations,id',
-            'date' => 'bail|required|date',
+            'sale_date' => 'bail|required|date',
             'feeds' => 'bail|required|array',
             'feeds.*.feed_id' => 'bail|required|exists:feeds,id',
             'feeds.*.price_per_unit' => 'bail|required|numeric|min:0',
@@ -46,8 +46,8 @@ class StoreFeedSaleRequest extends FormRequest
         return [
             'location_id.required' => 'Location ID is required.',
             'location_id.exists' => 'The selected location does not exist.',
-            'date.required' => 'Sale date is required.',
-            'date.date' => 'Sale date must be a valid date.',
+            'sale_date.required' => 'Sale date is required.',
+            'sale_date.date' => 'Sale date must be a valid date.',
             'feeds.required' => 'Feed data is required.',
             'feeds.array' => 'Feed data must be an array.',
             'feeds.*.feed_id.required' => 'Feed ID is required.',
@@ -64,7 +64,7 @@ class StoreFeedSaleRequest extends FormRequest
     {
         return $this->only([
             'location_id',
-            'date',
+            'sale_date',
             'feeds',
             'created_by',
         ]);

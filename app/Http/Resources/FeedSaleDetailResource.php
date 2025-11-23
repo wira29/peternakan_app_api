@@ -16,7 +16,7 @@ class FeedSaleDetailResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'feed' => $this->feed?->name,
+            'name' => $this->feed?->name,
             'qty' => $this->qty,
             'price_per_unit' => $this->price_per_unit,
             'total' => $this->total,
