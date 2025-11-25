@@ -31,7 +31,6 @@ class StoreFeedSaleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'location_id' => 'bail|required|exists:locations,id',
             'sale_date' => 'bail|required|date',
             'feeds' => 'bail|required|array',
             'feeds.*.feed_id' => 'bail|required|exists:feeds,id',
@@ -44,8 +43,6 @@ class StoreFeedSaleRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'location_id.required' => 'Location ID is required.',
-            'location_id.exists' => 'The selected location does not exist.',
             'sale_date.required' => 'Sale date is required.',
             'sale_date.date' => 'Sale date must be a valid date.',
             'feeds.required' => 'Feed data is required.',

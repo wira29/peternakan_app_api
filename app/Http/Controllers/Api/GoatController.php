@@ -30,7 +30,7 @@ class GoatController extends Controller
         if ($goats->isEmpty()) {
             return $this->sendResponse(
                 [], 
-                'No goats data found'
+                'No cows data found'
             );
         }
         
@@ -47,21 +47,21 @@ class GoatController extends Controller
     public function store(StoreGoatRequest $request)
     {
         $validated = $request->getData();
-        \Log::info("Data to create goat: " . json_encode($validated));
+        \Log::info("Data to create cow: " . json_encode($validated));
         try {
             $goat = Goat::create($validated);
         } catch (\Throwable $th) {
-            \Log::error("Failed to create goat: " . $th->getMessage());
+            \Log::error("Failed to create cow: " . $th->getMessage());
             return $this->sendError(
                 $th->getMessage(),
                  $th->getCode()
             );
         }
 
-        \Log::info("Created new goat with ID: " . $goat->code);
+        \Log::info("Created new cow with ID: " . $goat->code);
         return $this->sendResponse(
             new GoatResource($goat),
-            'Goat created successfully.',
+            'Cow created successfully.',
             Response::HTTP_CREATED
         );
     }
@@ -71,11 +71,11 @@ class GoatController extends Controller
      */
     public function show(string $code)
     {
-        \Log::info("Fetching goat with ID: " . $code);
+        \Log::info("Fetching cow with ID: " . $code);
         $goat = Goat::findOrFail($code);
         return $this->sendResponse(
             new GoatResource($goat),
-            'Goat retrieved successfully.'
+            'Cow retrieved successfully.'
         );
     }
 
@@ -87,7 +87,7 @@ class GoatController extends Controller
         $validated = $request->validated();
         $goat = Goat::findOrFail($code);
         $goat->update($validated);
-        \Log::info("Updated goat with ID: " . $goat->code);
+        \Log::info("Updated cow with ID: " . $goat->code);
         return response()->json($goat, Response::HTTP_OK);
     }
 
@@ -98,8 +98,8 @@ class GoatController extends Controller
     {
         $goat = Goat::findOrFail($code);
         $goat->delete();
-        \Log::info("Deleted goat with ID: " . $goat->code);
-        return response()->json('Goat deleted successfully', Response::HTTP_OK);
+        \Log::info("Deleted cow with ID: " . $goat->code);
+        return response()->json('Cow deleted successfully', Response::HTTP_OK);
     }
     /**
      * Restore the specified resource from storage.
@@ -108,7 +108,7 @@ class GoatController extends Controller
     {
         $goat = Goat::withTrashed()->findOrFail($code);
         $goat->restore();
-        \Log::info("Restored goat with ID: " . $goat->code);
-        return response()->json('Goat restored successfully.', Response::HTTP_OK);
+        \Log::info("Restored cow with ID: " . $goat->code);
+        return response()->json('Cow restored successfully.', Response::HTTP_OK);
     }
 }

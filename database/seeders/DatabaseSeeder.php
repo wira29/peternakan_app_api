@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             GoatSeeder::class,
             BlendTransactionSeeder::class,
             BlendTransactionDetailSeeder::class,
+            FeedSaleSeeder::class,
         ]);
         
     }

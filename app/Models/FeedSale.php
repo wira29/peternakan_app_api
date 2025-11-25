@@ -18,7 +18,6 @@ class FeedSale extends Model
     protected $guard_name = 'api';
 
     protected $fillable = [
-        'location_id',
         'sale_date',
         'total',
         'created_by',
