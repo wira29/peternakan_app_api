@@ -49,7 +49,7 @@ class MaterialTransactionController extends Controller
                     'created_by' => $validated['created_by'],
                 ]);
                 $material->calculateTotal();
-                $material->decreaseMaterialStock();
+                $material->increaseMaterialStock();
                 \Log::info('Created Material Transaction Detail: ' .json_encode($material));
             }
             $materialTransaction->sumTotal();
@@ -98,7 +98,7 @@ class MaterialTransactionController extends Controller
             $details = $materialTransaction->details;
             \Log::info('Material Transaction Details: '. json_encode($details));
             foreach ($details as $detail) {
-                $detail->increaseMaterialStock();
+                $detail->decreaseMaterialStock();
                 $detail->delete();
                 \Log::info('Delete Material Transaction Detail: '. json_encode($detail));
             }
@@ -117,7 +117,7 @@ class MaterialTransactionController extends Controller
             $details = MaterialTransactionDetail::onlyTrashed()->where('material_transaction_id', $materialTransaction->id)->get();
             \Log::info('Restore Material Transaction'. json_encode($materialTransaction));
             foreach ($details as $detail) {
-                $detail->decreaseMaterialStock();
+                $detail->increaseMaterialStock();
                 $detail->restore();
             }
             $materialTransaction->restore();
