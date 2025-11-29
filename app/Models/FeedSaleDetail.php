@@ -38,6 +38,10 @@ class FeedSaleDetail extends Model
     {
         return $this->belongsTo(Feed::class, 'feed_id');
     }
+    public function feedLocation()
+    {
+        return $this->belongsTo(FeedLocation::class, 'feed_location_id');
+    }
 
     public function decreaseFeedStock(){
         $this->feed->decreaseStock($this->qty);

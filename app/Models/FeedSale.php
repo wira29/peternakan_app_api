@@ -18,6 +18,7 @@ class FeedSale extends Model
     protected $guard_name = 'api';
 
     protected $fillable = [
+        'location_id',
         'sale_date',
         'total',
         'created_by',
@@ -30,6 +31,11 @@ class FeedSale extends Model
         'updated_at',
         'deleted_at',
     ];
+
+    public function location()
+    {
+        return $this->belongsTo(Location::class,'location_id');
+    }
 
     public function details()
     {

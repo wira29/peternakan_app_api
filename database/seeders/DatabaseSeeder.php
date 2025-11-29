@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             BlendTransactionSeeder::class,
             BlendTransactionDetailSeeder::class,
             FeedSaleSeeder::class,
+            MaterialTransactionSeeder::class,
         ]);
         
     }

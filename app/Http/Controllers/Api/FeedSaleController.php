@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FeedSale\StoreFeedSaleRequest;
 use App\Http\Resources\FeedSaleResource;
+use App\Models\Feed;
 use App\Models\FeedSale;
 use App\Models\FeedSaleDetail;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +19,7 @@ class FeedSaleController extends Controller
     public function index()
     {
         $feedSale = FeedSale::withoutTrashed()
-            ->with(['details', 'createdBy', 'updatedBy'])
+            ->with(['location','details', 'createdBy', 'updatedBy'])
             ->latest('sale_date')
             ->get();
         if ($feedSale->isEmpty()) {
@@ -50,6 +51,7 @@ class FeedSaleController extends Controller
                 ]);
                 $feeds->calculateTotal();
                 $feeds->decreaseFeedStock();
+                $feeds->feed->syncToLocation($feedSale->location_id, $feedData['qty']);
                 \Log::info('Created Feed Sale Detail: ' .json_encode($feeds));
             }
             $feedSale->sumTotal();

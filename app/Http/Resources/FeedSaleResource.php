@@ -16,6 +16,7 @@ class FeedSaleResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'location_id' => $this->location?->location,
             'sale_date' => $this->sale_date,
             'total' => $this->total,
             'details' => FeedSaleDetailResource::collection($this->details),

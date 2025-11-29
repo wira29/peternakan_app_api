@@ -23,7 +23,13 @@ return new class extends Migration
             $table->uuid('deleted_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->unique(['feed_id', 'location_id', 'unit'], 'unique_feed_loc_unit');
         });
+
+        
+
+
     }
 
     /**
