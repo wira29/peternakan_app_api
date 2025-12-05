@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Cage;
 use App\Http\Requests\Cage\StoreCageRequest;
 use App\Http\Requests\Cage\UpdateCageRequest;
+use App\Http\Resources\CageResource;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Log;
+
+use function Symfony\Component\Translation\t;
 
 class CageController extends Controller
 {
@@ -21,8 +23,17 @@ class CageController extends Controller
      */
     public function index()
     {
-        \Log::info("Fetching all cages");
-        return Cage::with('createdby', 'updatedby','deletedby')->get();
+        $cages = Cage::with('createdby', 'updatedby','deletedby')->get();
+        if ($cages->isEmpty()) {
+            return $this->sendResponse(
+                [], 
+                'No cage transactions data found'
+            );
+        }
+        return $this->sendResponse(
+            CageResource::collection($cages),
+            'Successfully get cage transactions data'
+        );
     }
 
     /**
@@ -30,11 +41,25 @@ class CageController extends Controller
      */
     public function store(StoreCageRequest $request)
     {
-        $validated = $request->validated();
+        $validated = $request->getData();
+        \Log::info('Data Request Create Feed Sale: ' .json_encode($validated));
+        
+        try {
+            $cage = Cage::create($validated);
+        } catch (\Throwable $th) {
+            \Log::error("Failed to create feed sale: " . $th->getMessage());
+            return $this->sendError(
+                $th->getMessage(),
+                 $th->getCode()
+            );
+        }
 
-        $cage = Cage::create($validated);
         \Log::info("Created new cage with ID: " . $cage->id);
-        return response()->json($cage, Response::HTTP_CREATED);
+        
+        return $this->sendResponse(
+            new CageResource($cage),
+            'Cage created successfully'
+        );
     }
 
     /**
@@ -42,9 +67,17 @@ class CageController extends Controller
      */
     public function show(string $id)
     {
-        \Log::info("Fetching cage with ID: " . $id);
-        $cage = Cage::with('createdby', 'updatedby','deletedby')->findOrFail($id);
-        return response()->json($cage, Response::HTTP_OK);
+        try
+        {
+            \Log::info('Retrieving cage with ID: ' . $id);
+            $cage = Cage::findOrFail($id);
+            return $this->sendResponse(new CageResource($cage), 'Cage retrieved successfully');
+        }
+        catch (\Exception $e)
+        {
+            \Log::error('Error retrieving cage: ' . $e->getMessage());
+            return $this->sendError($e->getMessage(), $e->getCode() ?: 500);
+        }
     }
 
     /**
@@ -60,26 +93,24 @@ class CageController extends Controller
             if (!$cage->isDirty()) {
                 Log::info("No changes detected for cage with ID: " . $id);
                 
-                return response()->json([
-                    'message' => 'No changes detected. The original data is returned.',
-                    'data'    => $cage 
-                ], Response::HTTP_OK);
+                return $this->sendResponse(
+                    new CageResource($cage),
+                    'No changes detected. The original data is returned.'
+                );
             }
 
             $cage->save();
             Log::info("Updated cage with ID: " . $cage->id);
 
-            return response()->json([
-                'message' => 'Cage updated successfully.',
-                'data'    => $cage 
-            ], Response::HTTP_OK);
+            return $this->sendResponse(
+                new CageResource($cage),
+                'Cage updated successfully.'
+            );
 
         } catch (\Exception $e) {
             Log::error("Error updating cage with ID $id: " . $e->getMessage());
             
-            return response()->json([
-                'message' => 'An error occurred while updating the cage.'
-            ], Response::HTTP_INTERNAL_SERVER_ERROR); 
+            return $this->sendError($e->getMessage(), $e->getCode() ?: 500);
         }
     }
 
@@ -88,17 +119,27 @@ class CageController extends Controller
      */
     public function destroy(string $id)
     {
-        $cage = Cage::withTrashed()->findOrFail($id);
-        $cage->restore();
-        \Log::info("Restored cage with ID: " . $cage->id);
-        return response()->json('Cage restored successfully.', Response::HTTP_OK);
+        try{
+            $cage = Cage::findOrFail($id);
+            $cage->delete();
+            \Log::info("Deleted cage with ID: " . $cage->id);
+            return $this->sendResponse(new CageResource($cage), 'Cage deleted successfully');
+        } catch (\Exception $e) {
+            \Log::error("Error deleting cage with ID $id: " . $e->getMessage());
+            return $this->sendError($e->getMessage(), $e->getCode() ?: 500);
+        }
     }
 
     public function restore(string $id)
     {
-        $cage = Cage::withTrashed()->findOrFail($id);
-        $cage->restore();
-        \Log::info("Restored cage with ID: " . $cage->id);
-        return response()->json('Cage restored successfully.', Response::HTTP_OK);
+        try {
+            $cage = Cage::withTrashed()->findOrFail($id);
+            $cage->restore();
+            \Log::info("Restored cage with ID: " . $cage->id);
+            return $this->sendResponse(new CageResource($cage), 'Cage restored successfully.');
+        } catch (\Exception $e) {
+            \Log::error("Error restoring cage with ID $id: " . $e->getMessage());
+            return $this->sendError($e->getMessage(), $e->getCode() ?: 500);
+        }
     }
 }
