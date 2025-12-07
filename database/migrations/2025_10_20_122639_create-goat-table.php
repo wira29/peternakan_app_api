@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('gender')->nullable();
             $table->date('date')->nullable();
             $table->integer('price')->nullable();
-            $table->boolean('is_breeder');
+            $table->boolean('is_breeder')->default(false);
             $table->boolean('is_qurbani')->default(false);
             $table->string('remarks')->nullable();
             $table->uuid('created_by')->nullable();

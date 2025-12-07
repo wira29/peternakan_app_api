@@ -84,11 +84,25 @@ class GoatController extends Controller
      */
     public function update(UpdateGoatRequest $request, string $code)
     {
-        $validated = $request->validated();
-        $goat = Goat::findOrFail($code);
-        $goat->update($validated);
-        \Log::info("Updated cow with ID: " . $goat->code);
-        return response()->json($goat, Response::HTTP_OK);
+        try{
+            $validated = $request->getData();
+            \Log::info("Data to update cow: " . json_encode($validated));
+            $goat = Goat::findOrFail($code);
+            $goat->update($validated);
+            \Log::info("Updated cow with ID: " . $goat->code);
+            
+        } catch (\Throwable $th) {
+            \Log::error("Failed to update cow: " . $th->getMessage());
+            return $this->sendError(
+                $th->getMessage(),
+                 $th->getCode()
+            );
+        }
+
+        return $this->sendResponse(
+                new GoatResource($goat),
+                'Cow updated successfully.'
+            );
     }
 
     /**
@@ -96,19 +110,42 @@ class GoatController extends Controller
      */
     public function destroy(string $code)
     {
-        $goat = Goat::findOrFail($code);
-        $goat->delete();
-        \Log::info("Deleted cow with ID: " . $goat->code);
-        return response()->json('Cow deleted successfully', Response::HTTP_OK);
+        try{
+            $goat = Goat::findOrFail($code);
+            $goat->delete();
+            $goat->deletedBy()->associate(auth()->user()->id);
+            \Log::info("Deleted cow with ID: " . $goat->code . " by " . auth()->user()->name);
+        } catch (\Throwable $th) {
+            \Log::error("Failed to delete cow: " . $th->getMessage());
+            return $this->sendError(
+                $th->getMessage(),
+                 $th->getCode()
+            );
+        }
+        return $this->sendResponse(
+            new GoatResource($goat),
+            'Successfully deleted cow'
+        );
     }
     /**
      * Restore the specified resource from storage.
      */
     public function restore(string $code)
     {
-        $goat = Goat::withTrashed()->findOrFail($code);
-        $goat->restore();
-        \Log::info("Restored cow with ID: " . $goat->code);
-        return response()->json('Cow restored successfully.', Response::HTTP_OK);
+        try{
+            $goat = Goat::withTrashed()->findOrFail($code);
+            $goat->restore();
+            \Log::info("Restored cow with ID: " . $goat->code);
+        } catch (\Throwable $th) {
+            \Log::error("Failed to restore cow: " . $th->getMessage());
+            return $this->sendError(
+                $th->getMessage(),
+                 $th->getCode()
+            );
+        }
+        return $this->sendResponse(
+            new GoatResource($goat),
+            'Successfully restored cow'
+        );
     }
 }
