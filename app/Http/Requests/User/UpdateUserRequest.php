@@ -72,6 +72,12 @@ class UpdateUserRequest extends FormRequest
                 'nullable',
                 'string',
             ],
+            'location_id' => [
+                'bail',
+                'nullable',
+                'uuid',
+                'exists:locations,id',
+            ],
             'updated_by' => [
                 'bail',
                 'nullable',
@@ -107,6 +113,9 @@ class UpdateUserRequest extends FormRequest
             'password.numbers' => 'Password must contain at least one number.',
             'password.symbols' => 'Password must contain at least one special character.', 
             'alamat.string' => 'Alamat must be a valid text.',
+
+            'location_id.uuid' => 'Location ID must be a valid UUID.',
+            'location_id.exists' => 'Location ID must exist in the locations table.',
         ];
     }
     
@@ -119,6 +128,7 @@ class UpdateUserRequest extends FormRequest
             'password',
             'alamat',
             'roles',
+            'location_id',
             'updated_by',
         ]);
         
