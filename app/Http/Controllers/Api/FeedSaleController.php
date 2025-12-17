@@ -101,6 +101,8 @@ class FeedSaleController extends Controller
             \Log::info('Feed Sale Details: '. json_encode($details));
             foreach ($details as $detail) {
                 $detail->increaseFeedStock();
+                $detail->deleted_by = auth()->user()->id;
+                $detail->save();
                 $detail->delete();
                 \Log::info('Delete Feed Sale Detail: '. json_encode($detail));
             }
@@ -134,5 +136,19 @@ class FeedSaleController extends Controller
                 $th->getCode()
             );
         }
+    }
+
+    public function historyByLocation(){
+        $location = auth()->user()->location_id;
+        $feedSale = FeedSale::withoutTrashed()
+            ->where('location_id', $location)
+            ->with(['location','details', 'createdBy', 'updatedBy'])
+            ->latest('sale_date')
+            ->get();
+        if ($feedSale->isEmpty()) {
+            return $this->sendResponse([], 'No feed sales data found');
+        }
+
+        return $this->sendResponse(FeedSaleResource::collection($feedSale), 'Feed sales data retrieved successfully');
     }
 }

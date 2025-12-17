@@ -63,6 +63,8 @@ class MaterialController extends Controller
     public function destroy(string $id)
     {
         $material = Material::findOrFail($id);
+        $material->deleted_by = auth()->user()->id;
+        $material->save();
         $material->delete();
         \Log::info("Deleted material with ID: " . $material->id);
         return response()->json('Material deleted successfully.', Response::HTTP_OK);

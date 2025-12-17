@@ -121,6 +121,8 @@ class CageController extends Controller
     {
         try{
             $cage = Cage::findOrFail($id);
+            $cage->deleted_by = auth()->user()->id;
+            $cage->save();
             $cage->delete();
             \Log::info("Deleted cage with ID: " . $cage->id);
             return $this->sendResponse(new CageResource($cage), 'Cage deleted successfully');

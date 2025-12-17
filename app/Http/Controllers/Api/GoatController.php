@@ -114,6 +114,7 @@ class GoatController extends Controller
             $goat = Goat::findOrFail($code);
             $goat->delete();
             $goat->deletedBy()->associate(auth()->user()->id);
+            $goat->save();
             \Log::info("Deleted cow with ID: " . $goat->code . " by " . auth()->user()->name);
         } catch (\Throwable $th) {
             \Log::error("Failed to delete cow: " . $th->getMessage());

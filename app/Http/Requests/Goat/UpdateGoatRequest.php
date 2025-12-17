@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Enums\GoatGender;
 use App\Enums\GoatOrigin;
 use App\Enums\FemaleCondition;
+use App\Enums\FemaleConditionEnum;
+use App\Enums\GoatOriginEnum;
 
 class UpdateGoatRequest extends FormRequest
 {
@@ -20,10 +22,9 @@ class UpdateGoatRequest extends FormRequest
 
     public function prepareForValidation() : void
     {
-        $user = auth()->user();
-        $this->merge([
-            'updated_by' => $user->id,
-        ]);
+        $data = $this->json()->all();
+        $data['updated_by'] = Auth::user()->id;
+        $this->replace($data);
     }
 
     /**
@@ -40,12 +41,12 @@ class UpdateGoatRequest extends FormRequest
             'cage_id' => 'bail|sometimes|exists:cages,id',
             'father_id' => 'bail|sometimes|nullable|exists:goats,id',
             'mother_id' => 'bail|sometimes|nullable|exists:goats,id',
-            'origin' => 'bail|sometimes|string|max:255|enum:' . GoatOrigin::class,
+            'origin' => 'bail|sometimes|string|max:255|enum:' . GoatOriginEnum::class,
             'color' => 'bail|sometimes|string|max:100',
             'gender' => 'bail|sometimes|enum:' . GoatGender::class,
             'date' => 'bail|sometimes|date',
             'price' => 'bail|sometimes|nullable|numeric|min:0',
-            'female_condition' => 'bail|sometimes|nullable|string|max:255|enum:' . FemaleCondition::class,
+            'female_condition' => 'bail|sometimes|nullable|string|max:255|enum:' . FemaleConditionEnum::class,
             'is_breeder' => 'bail|sometimes|boolean',
             'is_qurbani' => 'bail|sometimes|boolean',
             'remarks' => 'bail|sometimes|string|max:500',

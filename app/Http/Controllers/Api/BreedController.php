@@ -105,6 +105,8 @@ class BreedController extends Controller
     {
         try {
             $breed = Breed::findOrFail($id);
+            $breed->deleted_by = auth()->user()->id;
+            $breed->save();
             $breed->delete();
             \Log::info("Data to delete for breed ID $id: " . json_encode($breed));
         } catch (\Throwable $th) {

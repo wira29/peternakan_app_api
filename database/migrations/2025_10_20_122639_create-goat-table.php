@@ -27,9 +27,9 @@ return new class extends Migration
             $table->boolean('is_breeder')->default(false);
             $table->boolean('is_qurbani')->default(false);
             $table->string('remarks')->nullable();
-            $table->uuid('created_by')->nullable();
-            $table->uuid('updated_by')->nullable();
-            $table->uuid('deleted_by')->nullable();
+            $table->foreignUuid('created_by')->nullable()->constrained('users');
+            $table->foreignUuid('updated_by')->nullable()->constrained('users');
+            $table->foreignUuid('deleted_by')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
 

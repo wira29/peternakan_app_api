@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('mating_statuses', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('status')->unique();
-            $table->uuid('created_by')->nullable();
-            $table->uuid('updated_by')->nullable();
-            $table->uuid('deleted_by')->nullable();
+            $table->foreignUuid('created_by')->nullable()->constrained('users');
+            $table->foreignUuid('updated_by')->nullable()->constrained('users');
+            $table->foreignUuid('deleted_by')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -16,9 +16,9 @@ return new class extends Migration
             $table->foreignUuid('location_id')->nullable()->constrained('locations');
             $table->integer('total',false,true)->default(0);
             $table->date('sale_date');
-            $table->uuid('created_by')->nullable();
-            $table->uuid('updated_by')->nullable();
-            $table->uuid('deleted_by')->nullable();
+            $table->foreignUuid('created_by')->nullable()->constrained('users');
+            $table->foreignUuid('updated_by')->nullable()->constrained('users');
+            $table->foreignUuid('deleted_by')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -142,6 +142,8 @@ class BlendTransactionController extends Controller
                 \Log::info('Deleted material ID: ' . $material->id );
             }
             $blendTransaction->rollbackFeedStock();
+            $blendTransaction->deleted_by = auth()->user()->id;
+            $blendTransaction->save();
             $blendTransaction->delete();
             DB::commit();
             \Log::info('Deleted Blend Transaction success');
