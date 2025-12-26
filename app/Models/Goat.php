@@ -82,6 +82,10 @@ class Goat extends Model
         return $this->belongsTo(Goat::class, 'mother_id','code');
     }
 
+    public function vaccines(){
+        return $this->hasMany(VaccineHistory::class, 'goat_code', 'code');
+    }
+
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by')->select(['id', 'name']);

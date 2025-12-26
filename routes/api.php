@@ -15,7 +15,8 @@ use App\Http\Controllers\Api\GoatController;
 use App\Http\Controllers\Api\BlendTransactionController;
 use App\Http\Controllers\Api\FeedingController;
 use App\Http\Controllers\Api\FeedPurchaseController;
-
+use App\Http\Controllers\Api\VaccineController;
+use App\Http\Controllers\Api\VaccineHistoryController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -86,6 +87,13 @@ Route::middleware('permission:buy-feeds')->group(function () {
 Route::middleware('permission:feeding')->group(function () {
     Route::apiresource('feeding', FeedingController::class);
     Route::post('feeding/{id}/restore', [FeedingController::class, 'restore']);
+});
+
+Route::middleware('permission:view-vaccine-records')->group(function () {
+    Route::apiResource('vaccines', VaccineController::class);
+    Route::post('vaccines/{id}/restore', [VaccineController::class, 'restore']);
+    Route::apiresource('vaccine-histories', VaccineHistoryController::class);
+    Route::post('vaccine-histories/{id}/restore', [VaccineHistoryController::class, 'restore']);
 });
 
 

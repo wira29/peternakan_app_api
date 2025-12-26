@@ -64,6 +64,8 @@ class LocationController extends Controller
     public function destroy(string $id)
     {
         $location = Location::findOrFail($id);
+        $location->deleted_by = auth()->user()->id;
+        $location->save();
         $location->delete();
         \Log::info("Deleted location with ID: " . $location->id);
         return response()->json(['message' => 'Location deleted successfully'], Response::HTTP_OK);

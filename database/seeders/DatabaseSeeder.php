@@ -33,7 +33,8 @@ class DatabaseSeeder extends Seeder
             MaterialTransactionSeeder::class,
             FeedLocationSeeder::class,
             FeedingSeeder::class,
-            
+            VaccineSeeder::class,
+            VaccineHistorySeeder::class,
         ]);
         
     }

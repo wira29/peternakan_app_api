@@ -10,17 +10,14 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-
-class FeedSale extends Model
+class Vaccine extends Model
 {
     use HasFactory, Notifiable, HasRoles, HasApiTokens, HasUuids, SoftDeletes;
 
     protected $guard_name = 'api';
 
     protected $fillable = [
-        'location_id',
-        'sale_date',
-        'total',
+        'name',
         'created_by',
         'updated_by',
         'deleted_by',
@@ -32,35 +29,21 @@ class FeedSale extends Model
         'deleted_at',
     ];
 
-    public function details()
+    public function vaccineHistories()
     {
-        return $this->hasMany(FeedSaleDetail::class, 'feed_sale_id');
+        return $this->hasMany(VaccineHistory::class);
     }
-
-    public function sumTotal()
-    {
-        $this->total = $this->details()->sum('total');
-        \Log::info('Summed total for Feed Sale ID ' . $this->id . ': ' . $this->total);
-        $this->save();
-    }
-
-    public function location()
-    {
-        return $this->belongsTo(Location::class, 'location_id')->select(['id', 'location']);
-    }
-
+    
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by')->select(['id', 'name']);
     }
-
     public function updatedBy()
     {
         return $this->belongsTo(User::class, 'updated_by')->select(['id', 'name']);
     }
-
     public function deletedBy()
     {
         return $this->belongsTo(User::class, 'deleted_by')->select(['id', 'name']);
-    }
+    }   
 }
