@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Cage;
 use App\Http\Requests\Cage\StoreCageRequest;
 use App\Http\Requests\Cage\UpdateCageRequest;
+use App\Http\Resources\CageResource;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Log;
+
+use function Symfony\Component\Translation\t;
 
 class CageController extends Controller
 {
@@ -30,11 +32,25 @@ class CageController extends Controller
      */
     public function store(StoreCageRequest $request)
     {
-        $validated = $request->validated();
+        $validated = $request->getData();
+        \Log::info('Data Request Create Feed Sale: ' . json_encode($validated));
 
-        $cage = Cage::create($validated);
+        try {
+            $cage = Cage::create($validated);
+        } catch (\Throwable $th) {
+            \Log::error("Failed to create feed sale: " . $th->getMessage());
+            return $this->sendError(
+                $th->getMessage(),
+                $th->getCode()
+            );
+        }
+
         \Log::info("Created new cage with ID: " . $cage->id);
-        return response()->json($cage, Response::HTTP_CREATED);
+
+        return $this->sendResponse(
+            new CageResource($cage),
+            'Cage created successfully'
+        );
     }
 
     /**
@@ -95,9 +111,14 @@ class CageController extends Controller
 
     public function restore(string $id)
     {
-        $cage = Cage::withTrashed()->findOrFail($id);
-        $cage->restore();
-        \Log::info("Restored cage with ID: " . $cage->id);
-        return response()->json('Cage restored successfully.', Response::HTTP_OK);
+        try {
+            $cage = Cage::withTrashed()->findOrFail($id);
+            $cage->restore();
+            \Log::info("Restored cage with ID: " . $cage->id);
+            return $this->sendResponse(new CageResource($cage), 'Cage restored successfully.');
+        } catch (\Exception $e) {
+            \Log::error("Error restoring cage with ID $id: " . $e->getMessage());
+            return $this->sendError($e->getMessage(), $e->getCode() ?: 500);
+        }
     }
 }

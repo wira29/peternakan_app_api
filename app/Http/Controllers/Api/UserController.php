@@ -164,6 +164,8 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->email = $user->email . '.deleted.' . time();
         $user->saveQuietly();
+        $user->deleted_by = auth()->user()->id;
+        $user->save();
         $user->delete();
         $user->refresh();
 

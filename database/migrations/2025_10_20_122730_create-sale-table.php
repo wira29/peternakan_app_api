@@ -16,9 +16,9 @@ return new class extends Migration
             $table->string('goat_code');
             $table->integer('price');
             $table->date('date');
-            $table->uuid('created_by')->nullable();
-            $table->uuid('updated_by')->nullable();
-            $table->uuid('deleted_by')->nullable();
+            $table->foreignUuid('created_by')->nullable()->constrained('users');
+            $table->foreignUuid('updated_by')->nullable()->constrained('users');
+            $table->foreignUuid('deleted_by')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
 

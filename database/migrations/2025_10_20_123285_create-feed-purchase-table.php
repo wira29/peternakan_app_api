@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('supplier_name')->nullable();
             $table->date('purchase_date');
             $table->integer('total_amount')->default(0);
-            $table->uuid('created_by')->nullable();
-            $table->uuid('updated_by')->nullable();
-            $table->uuid('deleted_by')->nullable();
+            $table->foreignUuid('created_by')->nullable()->constrained('users');
+            $table->foreignUuid('updated_by')->nullable()->constrained('users');
+            $table->foreignUuid('deleted_by')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
         });

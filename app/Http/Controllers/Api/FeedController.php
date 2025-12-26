@@ -89,6 +89,8 @@ class FeedController extends Controller
     public function destroy(string $id)
     {
         $feed = Feed::findOrFail($id);
+        $feed->deleted_by = auth()->user()->id;
+        $feed->save();
         $feed->delete();
         \Log::info("Deleted feed with ID: " . $feed->id);
         return response()->json('Feed deleted successfully', Response::HTTP_OK);

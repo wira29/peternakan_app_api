@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class FeedSaleResource extends JsonResource
+class CageResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,11 +16,9 @@ class FeedSaleResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'location_id' => $this->location?->location,
-            'sale_date' => $this->sale_date,
-            'total' => $this->total,
-            'details' => FeedSaleDetailResource::collection($this->details),
+            'name' => $this->name,
             'location' => $this->location?->location,
+            'remarks' => $this->remarks,
             'created_by' => $this->createdBy?->name,
             'updated_by' => $this->updatedBy?->name,
         ];

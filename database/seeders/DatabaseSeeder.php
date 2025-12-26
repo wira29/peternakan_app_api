@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Feed;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -29,6 +30,10 @@ class DatabaseSeeder extends Seeder
             BlendTransactionSeeder::class,
             BlendTransactionDetailSeeder::class,
             FeedSaleSeeder::class,
+            MaterialTransactionSeeder::class,
+            FeedLocationSeeder::class,
+            FeedingSeeder::class,
+            
         ]);
         
     }

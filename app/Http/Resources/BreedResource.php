@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class FeedPurchaseResource extends JsonResource
+class BreedResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,11 +16,12 @@ class FeedPurchaseResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'purchase_date' => $this->purchase_date,
-            'total' => $this->total_amount,
-            'details' => FeedSaleDetailResource::collection($this->details),
+            'name' => $this->name,
+            'remarks' => $this->remarks,
             'created_by' => $this->createdBy?->name,
+            'created_at' => $this->created_at,
             'updated_by' => $this->updatedBy?->name,
+            'updated_at' => $this->updated_at
         ];
     }
 }

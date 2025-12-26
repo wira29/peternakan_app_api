@@ -70,6 +70,10 @@ class Goat extends Model
         return $this->belongsTo(Cage::class);
     }
 
+    public function location(){
+        return $this->belongsTo(Location::class);
+    }
+
     public function father(){
         return $this->belongsTo(Goat::class, 'father_id','code');
     }

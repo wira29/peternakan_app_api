@@ -14,11 +14,12 @@ return new class extends Migration
         Schema::create('feeding', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('cage_id')->constrained('cages')->onDelete('cascade');
+            $table->foreignUuid('feed_location_id')->constrained('feed_locations')->onDelete('cascade');
             $table->integer('qty');
             $table->date('date');
-            $table->uuid('created_by')->nullable();
-            $table->uuid('updated_by')->nullable();
-            $table->uuid('deleted_by')->nullable();
+            $table->foreignUuid('created_by')->nullable()->constrained('users');
+            $table->foreignUuid('updated_by')->nullable()->constrained('users');
+            $table->foreignUuid('deleted_by')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
         });

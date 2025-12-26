@@ -31,6 +31,11 @@ class Cage extends Model
         'updated_at',
         'deleted_at',
     ];
+
+    public function location()
+    {
+        return $this->belongsTo(Location::class);
+    }
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by')->select(['id', 'name']);

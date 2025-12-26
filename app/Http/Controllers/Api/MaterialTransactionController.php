@@ -99,6 +99,8 @@ class MaterialTransactionController extends Controller
             \Log::info('Material Transaction Details: '. json_encode($details));
             foreach ($details as $detail) {
                 $detail->decreaseMaterialStock();
+                $detail->deleted_by = auth()->user()->id;
+                $detail->save();
                 $detail->delete();
                 \Log::info('Delete Material Transaction Detail: '. json_encode($detail));
             }
