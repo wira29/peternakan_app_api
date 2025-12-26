@@ -19,6 +19,7 @@ class FeedSaleResource extends JsonResource
             'sale_date' => $this->sale_date,
             'total' => $this->total,
             'details' => FeedSaleDetailResource::collection($this->details),
+            'location' => $this->location?->location,
             'created_by' => $this->createdBy?->name,
             'updated_by' => $this->updatedBy?->name,
         ];

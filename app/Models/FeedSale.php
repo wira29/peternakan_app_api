@@ -36,10 +36,16 @@ class FeedSale extends Model
         return $this->hasMany(FeedSaleDetail::class, 'feed_sale_id');
     }
 
-    public function sumTotal(){
+    public function sumTotal()
+    {
         $this->total = $this->details()->sum('total');
         \Log::info('Summed total for Feed Sale ID ' . $this->id . ': ' . $this->total);
         $this->save();
+    }
+
+    public function location()
+    {
+        return $this->belongsTo(Location::class, 'location_id')->select(['id', 'location']);
     }
 
     public function createdBy()
@@ -56,5 +62,4 @@ class FeedSale extends Model
     {
         return $this->belongsTo(User::class, 'deleted_by')->select(['id', 'name']);
     }
-
 }

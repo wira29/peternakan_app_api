@@ -4,6 +4,7 @@ namespace App\Http\Requests\Feed;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class StoreFeedRequest extends FormRequest
 {
@@ -15,7 +16,7 @@ class StoreFeedRequest extends FormRequest
         return auth()->user()->can('manage-feeds');
     }
 
-    public function prepareForValidation() : void
+    public function prepareForValidation(): void
     {
         $user = auth()->user();
         $this->merge([
@@ -60,7 +61,7 @@ class StoreFeedRequest extends FormRequest
             'unit.max' => 'Unit must not exceed 100 characters.',
             'price.integer' => 'Price must be an integer.',
             'price.min' => 'Price must be at least 0.',
-            
+
         ];
     }
 

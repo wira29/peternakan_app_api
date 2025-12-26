@@ -22,7 +22,7 @@ class CageController extends Controller
     public function index()
     {
         \Log::info("Fetching all cages");
-        return Cage::with('createdby', 'updatedby','deletedby')->get();
+        return Cage::with('createdby', 'updatedby', 'deletedby')->get();
     }
 
     /**
@@ -43,7 +43,7 @@ class CageController extends Controller
     public function show(string $id)
     {
         \Log::info("Fetching cage with ID: " . $id);
-        $cage = Cage::with('createdby', 'updatedby','deletedby')->findOrFail($id);
+        $cage = Cage::with('createdby', 'updatedby', 'deletedby')->findOrFail($id);
         return response()->json($cage, Response::HTTP_OK);
     }
 
@@ -59,10 +59,10 @@ class CageController extends Controller
 
             if (!$cage->isDirty()) {
                 Log::info("No changes detected for cage with ID: " . $id);
-                
+
                 return response()->json([
                     'message' => 'No changes detected. The original data is returned.',
-                    'data'    => $cage 
+                    'data'    => $cage
                 ], Response::HTTP_OK);
             }
 
@@ -71,15 +71,14 @@ class CageController extends Controller
 
             return response()->json([
                 'message' => 'Cage updated successfully.',
-                'data'    => $cage 
+                'data'    => $cage
             ], Response::HTTP_OK);
-
         } catch (\Exception $e) {
             Log::error("Error updating cage with ID $id: " . $e->getMessage());
-            
+
             return response()->json([
                 'message' => 'An error occurred while updating the cage.'
-            ], Response::HTTP_INTERNAL_SERVER_ERROR); 
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -88,10 +87,10 @@ class CageController extends Controller
      */
     public function destroy(string $id)
     {
-        $cage = Cage::withTrashed()->findOrFail($id);
-        $cage->restore();
-        \Log::info("Restored cage with ID: " . $cage->id);
-        return response()->json('Cage restored successfully.', Response::HTTP_OK);
+        $cage = Cage::findOrFail($id);
+        $cage->delete();
+        \Log::info("Deleted cage with ID: " . $cage->id);
+        return response()->json('Cage deleted successfully.', Response::HTTP_OK);
     }
 
     public function restore(string $id)

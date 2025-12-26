@@ -26,19 +26,18 @@ class GoatController extends Controller
             ->with(['breed', 'cage', 'father', 'mother', 'createdBy', 'updatedBy'])
             ->latest("updated_at")
             ->get();
-        
+
         if ($goats->isEmpty()) {
             return $this->sendResponse(
-                [], 
+                [],
                 'No cows data found'
             );
         }
-        
+
         return $this->sendResponse(
             GoatResource::collection($goats),
             'Successfully get goats data'
         );
-        
     }
 
     /**
@@ -46,6 +45,7 @@ class GoatController extends Controller
      */
     public function store(StoreGoatRequest $request)
     {
+        dd($request->getData());
         $validated = $request->getData();
         \Log::info("Data to create cow: " . json_encode($validated));
         try {
@@ -54,7 +54,7 @@ class GoatController extends Controller
             \Log::error("Failed to create cow: " . $th->getMessage());
             return $this->sendError(
                 $th->getMessage(),
-                 $th->getCode()
+                $th->getCode()
             );
         }
 
