@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
             FeedingSeeder::class,
             VaccineSeeder::class,
             VaccineHistorySeeder::class,
+            WeightHistorySeeder::class,
         ]);
         
     }

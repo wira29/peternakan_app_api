@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\FeedingController;
 use App\Http\Controllers\Api\FeedPurchaseController;
 use App\Http\Controllers\Api\VaccineController;
 use App\Http\Controllers\Api\VaccineHistoryController;
+use App\Http\Controllers\Api\WeightHistoryController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -94,6 +95,11 @@ Route::middleware('permission:view-vaccine-records')->group(function () {
     Route::post('vaccines/{id}/restore', [VaccineController::class, 'restore']);
     Route::apiresource('vaccine-histories', VaccineHistoryController::class);
     Route::post('vaccine-histories/{id}/restore', [VaccineHistoryController::class, 'restore']);
+});
+
+Route::middleware('permission:view-weight-records')->group(function () {
+    Route::apiResource('weight-histories', WeightHistoryController::class);
+    Route::post('weight-histories/{id}/restore', [WeightHistoryController::class, 'restore']);
 });
 
 

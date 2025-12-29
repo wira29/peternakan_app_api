@@ -1,8 +1,11 @@
 <?php
 
+use Illuminate\Container\Attributes\DB;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+
+use function Symfony\Component\Clock\now;
 
 return new class extends Migration
 {
@@ -13,7 +16,7 @@ return new class extends Migration
     {
         Schema::create('weight_histories', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('goat_code');
+            $table->foreignUuid('goat_code')->constrained('goats', 'code')->onDelete('cascade');
             $table->integer('weight');
             $table->integer('height')->nullable();
             $table->date('date');
@@ -22,8 +25,6 @@ return new class extends Migration
             $table->foreignUuid('deleted_by')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign('goat_code')->references('code')->on('goats')->onDelete('cascade');
         });
     }
 
