@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
             VaccineSeeder::class,
             VaccineHistorySeeder::class,
             WeightHistorySeeder::class,
+            MatingHistorySeeder::class,
         ]);
         
     }

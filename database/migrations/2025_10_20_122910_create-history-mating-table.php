@@ -13,19 +13,20 @@ return new class extends Migration
     {
         Schema::create('mating_histories', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('female_code');
-            $table->string('male_code');
-            $table->uuid('mating_type_id')->constrained('mating_types')->onDelete('cascade');
-            $table->uuid('mating_status_id')->constrained('mating_statuses')->onDelete('cascade');
-            $table->string('remarks')->nullable();
+            $table->string('female_id');
+            $table->string('male_id');
+            $table->string('mating_type');
+            $table->string('mating_date')->nullable();
+            $table->string('status');
+            $table->string('remark')->nullable();
             $table->foreignUuid('created_by')->nullable()->constrained('users');
             $table->foreignUuid('updated_by')->nullable()->constrained('users');
             $table->foreignUuid('deleted_by')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('female_code')->references('code')->on('goats')->onDelete('cascade');
-            $table->foreign('male_code')->references('code')->on('goats')->onDelete('cascade');
+            $table->foreign('female_id')->references('code')->on('goats');
+            $table->foreign('male_id')->references('code')->on('goats');
         });
     }
 

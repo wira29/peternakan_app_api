@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\GoatController;
 use App\Http\Controllers\Api\BlendTransactionController;
 use App\Http\Controllers\Api\FeedingController;
 use App\Http\Controllers\Api\FeedPurchaseController;
+use App\Http\Controllers\Api\MatingHistoryController;
 use App\Http\Controllers\Api\VaccineController;
 use App\Http\Controllers\Api\VaccineHistoryController;
 use App\Http\Controllers\Api\WeightHistoryController;
@@ -100,6 +101,11 @@ Route::middleware('permission:view-vaccine-records')->group(function () {
 Route::middleware('permission:view-weight-records')->group(function () {
     Route::apiResource('weight-histories', WeightHistoryController::class);
     Route::post('weight-histories/{id}/restore', [WeightHistoryController::class, 'restore']);
+});
+
+Route::middleware('permission:view-mating-records')->group(function () {
+    Route::apiResource('mating-histories', MatingHistoryController::class);
+    Route::post('mating-histories/{id}/restore', [MatingHistoryController::class, 'restore']);
 });
 
 
