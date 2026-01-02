@@ -22,9 +22,15 @@ class GoatController extends Controller
      */
     public function index()
     {
+        \Log::info("Fetching all goats");
+
+
         $goats = Goat::withoutTrashed()
             ->with(['breed', 'cage', 'father', 'mother', 'createdBy', 'updatedBy'])
             ->latest("updated_at")
+            ->when(request('status'), function ($query, $status) {
+                $query->where('status', $status);
+            })
             ->get();
 
         if ($goats->isEmpty()) {
@@ -84,25 +90,24 @@ class GoatController extends Controller
      */
     public function update(UpdateGoatRequest $request, string $code)
     {
-        try{
+        try {
             $validated = $request->getData();
             \Log::info("Data to update cow: " . json_encode($validated));
             $goat = Goat::findOrFail($code);
             $goat->update($validated);
             \Log::info("Updated cow with ID: " . $goat->code);
-            
         } catch (\Throwable $th) {
             \Log::error("Failed to update cow: " . $th->getMessage());
             return $this->sendError(
                 $th->getMessage(),
-                 $th->getCode()
+                $th->getCode()
             );
         }
 
         return $this->sendResponse(
-                new GoatResource($goat),
-                'Cow updated successfully.'
-            );
+            new GoatResource($goat),
+            'Cow updated successfully.'
+        );
     }
 
     /**
@@ -110,7 +115,7 @@ class GoatController extends Controller
      */
     public function destroy(string $code)
     {
-        try{
+        try {
             $goat = Goat::findOrFail($code);
             $goat->delete();
             $goat->deletedBy()->associate(auth()->user()->id);
@@ -120,7 +125,7 @@ class GoatController extends Controller
             \Log::error("Failed to delete cow: " . $th->getMessage());
             return $this->sendError(
                 $th->getMessage(),
-                 $th->getCode()
+                $th->getCode()
             );
         }
         return $this->sendResponse(
@@ -133,7 +138,7 @@ class GoatController extends Controller
      */
     public function restore(string $code)
     {
-        try{
+        try {
             $goat = Goat::withTrashed()->findOrFail($code);
             $goat->restore();
             \Log::info("Restored cow with ID: " . $goat->code);
@@ -141,7 +146,7 @@ class GoatController extends Controller
             \Log::error("Failed to restore cow: " . $th->getMessage());
             return $this->sendError(
                 $th->getMessage(),
-                 $th->getCode()
+                $th->getCode()
             );
         }
         return $this->sendResponse(
