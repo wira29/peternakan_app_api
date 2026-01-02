@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\BlendTransactionController;
 use App\Http\Controllers\Api\FeedingController;
 use App\Http\Controllers\Api\FeedPurchaseController;
 use App\Http\Controllers\Api\MatingHistoryController;
+use App\Http\Controllers\Api\SaleGoatController;
 use App\Http\Controllers\Api\VaccineController;
 use App\Http\Controllers\Api\VaccineHistoryController;
 use App\Http\Controllers\Api\WeightHistoryController;
@@ -108,4 +109,8 @@ Route::middleware('permission:view-mating-records')->group(function () {
     Route::post('mating-histories/{id}/restore', [MatingHistoryController::class, 'restore']);
 });
 
+Route::middleware('permission:sale-goats')->group(function () {
+    Route::apiResource('sale-goats', SaleGoatController::class);
+    Route::post('sale-goats/{id}/restore', [SaleGoatController::class, 'restore']);
+});
 

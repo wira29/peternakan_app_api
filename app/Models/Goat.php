@@ -38,6 +38,7 @@ class Goat extends Model
         'gender',
         'date',
         'price',
+        'status',
         'female_condition',
         'is_breeder',
         'is_qurbani',
@@ -84,6 +85,25 @@ class Goat extends Model
 
     public function vaccines(){
         return $this->hasMany(VaccineHistory::class, 'goat_code', 'code');
+    }
+
+    public function weightHistories(){
+        return $this->hasMany(WeightHistory::class, 'goat_code', 'code');
+    }
+
+    public function matingHistoriesAsFemale(){
+        return $this->hasMany(MatingHistory::class, 'female_id', 'code');
+    }
+    public function matingHistoriesAsMale(){
+        return $this->hasMany(MatingHistory::class, 'male_id', 'code');
+    }
+
+    public function availableGoats(){
+        return $this->where('status', 'available');
+    }
+
+    public function soldGoats(){
+        return $this->where('status', 'sold');
     }
 
     public function createdBy()
