@@ -7,24 +7,24 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class VaccineHistoryResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(Request $request): array
-    {
-        return [
-          'id' => $this->id,
-          'vaccine' => $this->vaccine,
-          'goat' => $this->goat,
-          'date' => $this->date,
-          'created_by' => $this->createdBy?->name,
-          'created_at' => $this->created_at,
-          'updated_by' => $this->updatedBy?->name,
-          'updated_at' => $this->updated_at,
-          'deleted_by' => $this->deletedBy?->name,
-          'deleted_at' => $this->deleted_at
-        ];
-    }
+  /**
+   * Transform the resource into an array.
+   *
+   * @return array<string, mixed>
+   */
+  public function toArray(Request $request): array
+  {
+    return [
+      'id' => $this->id,
+      'vaccine' => VaccineResource::make($this->vaccine),
+      'goat' => GoatResource::make($this->goat),
+      'date' => $this->date,
+      'created_by' => $this->createdBy?->name,
+      'created_at' => $this->created_at,
+      'updated_by' => $this->updatedBy?->name,
+      'updated_at' => $this->updated_at,
+      'deleted_by' => $this->deletedBy?->name,
+      'deleted_at' => $this->deleted_at
+    ];
+  }
 }
