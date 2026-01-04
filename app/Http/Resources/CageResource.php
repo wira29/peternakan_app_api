@@ -18,7 +18,9 @@ class CageResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'location' => $this->location?->location,
+            'capacity' => $this->capacity,
             'remarks' => $this->remarks,
+            'goats' => GoatResource::collection($this->goats),
             'created_by' => $this->createdBy?->name,
             'updated_by' => $this->updatedBy?->name,
         ];

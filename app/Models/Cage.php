@@ -36,6 +36,11 @@ class Cage extends Model
     {
         return $this->belongsTo(Location::class);
     }
+
+    public function goats()
+    {
+        return $this->hasMany(Goat::class);
+    }
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by')->select(['id', 'name']);

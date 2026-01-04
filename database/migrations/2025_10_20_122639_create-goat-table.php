@@ -22,7 +22,8 @@ return new class extends Migration
             $table->string('female_condition')->nullable();
             $table->string('color')->nullable();
             $table->string('gender')->nullable();
-            $table->date('date')->nullable();
+            $table->date('date_of_birth')->nullable();
+            $table->date('date_of_purchase')->nullable();
             $table->integer('price')->nullable();
             $table->string('status')->default('available');
             $table->boolean('is_breeder')->default(false);

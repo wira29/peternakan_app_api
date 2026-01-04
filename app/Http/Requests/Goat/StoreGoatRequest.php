@@ -7,6 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Enums\GoatGender;
 use App\Enums\GoatOrigin;
 use App\Enums\FemaleCondition;
+use App\Enums\FemaleConditionEnum;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
 use App\Models\Cage;
@@ -59,14 +60,15 @@ class StoreGoatRequest extends FormRequest
                             'required',
                             new Enum(GoatGender::class) // <-- Gunakan sebagai objek
                         ],
-            'date' => 'bail|required|date_format:Y-m-d',
+            'date_of_birth' => 'bail|required|date_format:Y-m-d',
+            'date_of_purchase' => 'bail|nullable|date_format:Y-m-d',
             'price' => 'bail|nullable|numeric|min:0',
             'female_condition' => [
                             'bail',
                             'nullable',
                             'string',
                             'max:255',
-                            new Enum(FemaleCondition::class)
+                            new Enum(FemaleConditionEnum::class)
                         ],
             'is_breeder' => 'bail|nullable|boolean',
             'is_qurbani' => 'bail|nullable|boolean',
@@ -94,8 +96,8 @@ class StoreGoatRequest extends FormRequest
             'color.max' => 'Color must not exceed 100 characters.',
             'gender.required' => 'Gender is required.',
             'gender.Enum' => 'Gender must be a valid value.',
-            'date.required' => 'Date is required.',
-            'date.date' => 'Date must be a valid date.',
+            'date_of_birth.required' => 'Date of birth is required.',
+            'date_of_birth.date_format' => 'Date of birth must be in YYYY-MM-DD format.',
             'price.numeric' => 'Price must be a number.',
             'price.min' => 'Price must be at least 0.',
             'female_condition.Enum' => 'Female condition must be a valid value.',
@@ -119,7 +121,8 @@ class StoreGoatRequest extends FormRequest
             'origin',
             'color',
             'gender',
-            'date',
+            'date_of_birth',
+            'date_of_purchase',
             'price',
             'female_condition',
             'is_breeder',
