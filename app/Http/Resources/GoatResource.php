@@ -14,6 +14,10 @@ class GoatResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $vaccineLimit = $request->input('limit_vaccine');
+        $matingLimit  = $request->input('limit_mating');
+        $weightLimit  = $request->input('limit_weight');
+
         return [
             'code' => $this->code,
             'breed' => $this->breed?->name,
@@ -30,9 +34,15 @@ class GoatResource extends JsonResource
             'is_breeder' => $this->is_breeder ? true : false,
             'is_qurbani' => $this->is_qurbani ? true : false,
             'remarks' => $this->remarks,
-            'vaccines' => VaccineResource::collection($this->vaccines),
-            'mating_history' => MatingHistoryResource::collection($this->matingHistory),
-            'weight_history' => WeightHistoryResource::collection($this->weightHistories),
+            'vaccines' => VaccineResource::collection(
+                $vaccineLimit ? $this->vaccines->take((int)$vaccineLimit) : $this->vaccines
+            ),
+            'mating_history' => MatingHistoryResource::collection(
+                $matingLimit ? $this->matingHistory->take((int)$matingLimit) : $this->matingHistory
+            ),
+            'weight_history' => WeightHistoryResource::collection(
+                $weightLimit ? $this->weightHistories->take((int)$weightLimit) : $this->weightHistories
+            ),
             'created_by' => $this->createdBy?->name,
             'updated_by' => $this->updatedBy?->name,
             'deleted_by' => $this->deletedBy?->name,
