@@ -24,7 +24,8 @@ class GoatResource extends JsonResource
             'origin' => $this->origin?->value,
             'color' => $this->color,
             'gender' => $this->gender?->value,
-            'date' => $this->date,
+            'date_of_birth' => $this->date_of_birth,
+            'date_of_purchase' => $this->date_of_purchase,
             'price' => $this->price,    
             'is_breeder' => $this->is_breeder ? true : false,
             'is_qurbani' => $this->is_qurbani ? true : false,
@@ -32,7 +33,6 @@ class GoatResource extends JsonResource
             'created_by' => $this->createdBy?->name,
             'updated_by' => $this->updatedBy?->name,
             'deleted_by' => $this->deletedBy?->name,
-
         ];
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Enums\GoatGender;
 use App\Enums\GoatOrigin;
 use App\Enums\FemaleCondition;
+use App\Enums\FemaleConditionEnum;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
 use App\Models\Cage;
@@ -59,14 +60,15 @@ class StoreGoatRequest extends FormRequest
                             'required',
                             new Enum(GoatGender::class) // <-- Gunakan sebagai objek
                         ],
-            'date' => 'bail|required|date_format:Y-m-d',
+            'date_of_birth' => 'bail|required|date_format:Y-m-d',
+            'date_of_purchase' => 'bail|nullable|date_format:Y-m-d',
             'price' => 'bail|nullable|numeric|min:0',
             'female_condition' => [
                             'bail',
                             'nullable',
                             'string',
                             'max:255',
-                            new Enum(FemaleCondition::class)
+                            new Enum(FemaleConditionEnum::class)
                         ],
             'is_breeder' => 'bail|nullable|boolean',
             'is_qurbani' => 'bail|nullable|boolean',
