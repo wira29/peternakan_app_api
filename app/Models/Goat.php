@@ -99,6 +99,14 @@ class Goat extends Model
         return $this->hasMany(MatingHistory::class, 'male_id', 'code');
     }
 
+    public function matingHistory(){
+        if ($this->gender == GoatGender::MALE->value){
+            return $this->matingHistoriesAsMale();
+        }else{
+            return $this->matingHistoriesAsFemale();
+        }
+    }
+
     public function availableGoats(){
         return $this->where('status', 'available');
     }
