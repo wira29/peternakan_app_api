@@ -33,6 +33,10 @@ class FeedLocation extends Model
         'deleted_at',
     ];
 
+    public function location(){
+        return $this->belongsTo(Location::class);
+    }
+
     public function increaseStock(int $qty)
     {
         $this->increment('stock',$qty);
