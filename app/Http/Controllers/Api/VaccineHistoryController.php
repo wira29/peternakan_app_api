@@ -18,7 +18,7 @@ class VaccineHistoryController extends Controller
 
     public function index()
     {
-        $history = VaccineHistory::all();
+        $history = VaccineHistory::with('vaccine', 'goat')->get();
         if ($history->isEmpty()) {
             return $this->sendResponse([], 'No vaccine history records found');
         }

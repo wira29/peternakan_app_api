@@ -16,8 +16,8 @@ class VaccineHistoryResource extends JsonResource
   {
     return [
       'id' => $this->id,
-      'vaccine' => VaccineResource::make($this->vaccine),
-      'goat' => GoatResource::make($this->goat),
+      'vaccine' => new VaccineResource($this->vaccine),
+      'goat' => new GoatResource($this->whenLoaded('goat')),
       'date' => $this->date,
       'created_by' => $this->createdBy?->name,
       'created_at' => $this->created_at,

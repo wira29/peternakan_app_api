@@ -34,8 +34,8 @@ class GoatResource extends JsonResource
             'is_breeder' => $this->is_breeder ? true : false,
             'is_qurbani' => $this->is_qurbani ? true : false,
             'remarks' => $this->remarks,
-            'vaccines' => VaccineResource::collection(
-                $vaccineLimit ? $this->vaccines->take((int)$vaccineLimit) : $this->vaccines
+            'vaccines' => VaccineHistoryResource::collection(
+                $vaccineLimit ? $this->vaccineHistories->take((int)$vaccineLimit) : $this->vaccineHistories
             ),
             'mating_history' => MatingHistoryResource::collection(
                 $matingLimit ? $this->matingHistory->take((int)$matingLimit) : $this->matingHistory
