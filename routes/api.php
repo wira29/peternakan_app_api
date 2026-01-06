@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\BreedController;
 use App\Http\Controllers\Api\GoatController;
 use App\Http\Controllers\Api\BlendTransactionController;
 use App\Http\Controllers\Api\FeedingController;
+use App\Http\Controllers\Api\FeedLocationController;
 use App\Http\Controllers\Api\FeedPurchaseController;
 use App\Http\Controllers\Api\MatingHistoryController;
 use App\Http\Controllers\Api\SaleGoatController;
@@ -90,6 +91,7 @@ Route::middleware('permission:buy-feeds')->group(function () {
 Route::middleware('permission:feeding')->group(function () {
     Route::apiresource('feeding', FeedingController::class);
     Route::post('feeding/{id}/restore', [FeedingController::class, 'restore']);
+    Route::apiresource('feed-location', FeedLocationController::class)->only('index');
 });
 
 Route::middleware('permission:view-vaccine-records')->group(function () {
@@ -113,4 +115,6 @@ Route::middleware('permission:sale-goats')->group(function () {
     Route::apiResource('sale-goats', SaleGoatController::class);
     Route::post('sale-goats/{id}/restore', [SaleGoatController::class, 'restore']);
 });
+
+
 
