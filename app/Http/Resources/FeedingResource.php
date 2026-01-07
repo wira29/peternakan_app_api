@@ -18,6 +18,7 @@ class FeedingResource extends JsonResource
             'id' => $this->id,
             'cage_id' => $this->cage?->name,
             'feed_location_id' => $this->feedLocation?->name,
+            'feed_unit' => $this->feedLocation?->unit,
             'qty' => $this->qty,
             'date' => $this->date,
             'created_by' => $this->created_by,

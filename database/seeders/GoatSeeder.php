@@ -6,6 +6,7 @@ use App\Enums\FemaleConditionEnum;
 use App\Enums\GoatGender;
 use App\Enums\GoatOriginEnum;
 use App\Models\Goat;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -27,12 +28,13 @@ class GoatSeeder extends Seeder
                 'origin'           => GoatOriginEnum::BUY->value,
                 'color'            => 'Merah Bata',
                 'gender'           => GoatGender::MALE->value,
-                'date'             => '2022-06-15', 
-                'price'            => 22500000, 
+                'date_of_birth'    => '2022-06-15',
+                'price'            => 22500000,
                 'female_condition' => null,
                 'is_breeder'       => 0,
                 'is_qurbani'       => 1,
                 'remarks'          => 'Sapi sehat, bobot 450kg, siap qurban',
+                'created_by'       => User::first()->id,
             ],
 
             [
@@ -45,12 +47,13 @@ class GoatSeeder extends Seeder
                 'origin'           => GoatOriginEnum::BIRTH->value,
                 'color'            => 'Putih',
                 'gender'           => GoatGender::FEMALE->value,
-                'date'             => '2021-02-10',
+                'date_of_birth'             => '2021-02-10',
                 'price'            => 0,
                 'female_condition' => FemaleConditionEnum::PREGNANT->value,
                 'is_breeder'       => 1,
                 'is_qurbani'       => 0,
                 'remarks'          => 'Indukan PO, sedang bunting 4 bulan',
+                'created_by'       => User::first()->id,
             ],
 
             [
@@ -58,17 +61,18 @@ class GoatSeeder extends Seeder
                 'breed_id'         => 'a1b2c3d4-1111-2222-3333-a1b2c3d4e5fe',
                 'cage_id'          => 'a1b2c3d4-1111-2222-3333-a1b2c3d4e5f7',
                 'location_id'      => 'a1b2c3d4-1111-2222-3333-a1b2c3d4e5f7',
-                'father_id'        => 'SPI-001', 
-                'mother_id'        => 'SPI-002', 
+                'father_id'        => 'SPI-001',
+                'mother_id'        => 'SPI-002',
                 'origin'           => GoatOriginEnum::BIRTH->value,
                 'color'            => 'Merah Putih',
                 'gender'           => GoatGender::MALE->value,
-                'date'             => '2024-05-01',
+                'date_of_birth'             => '2024-05-01',
                 'price'            => 0,
                 'female_condition' => null,
                 'is_breeder'       => 0,
                 'is_qurbani'       => 0,
                 'remarks'          => 'Pedet jantan, masih menyusu',
+                'created_by'       => User::first()->id,
             ],
         ];
 
