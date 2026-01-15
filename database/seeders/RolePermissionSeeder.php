@@ -33,7 +33,8 @@ class RolePermissionSeeder extends Seeder
             'feeding',
             'sale-goats',
             'view-sale-reports',
-            'buy-feeds'
+            'buy-feeds',
+            'manage-milk',
         ];
 
         foreach ($permissions as $permission) {
@@ -57,6 +58,6 @@ class RolePermissionSeeder extends Seeder
         $supplier = Role::findByName('supplier', 'api');
         $supplier->givePermissionTo(['manage-locations', 'manage-materials', 'manage-feeds', 'manage-orders-materials', 'manage-blend-materials', 'sale-feeds']);
         $admin = Role::findByName('admin', 'api');
-        $admin->givePermissionTo(['manage-cages', 'manage-breeds', 'manage-goats', 'view-vaccine-records', 'view-weight-records', 'view-mating-records', 'feeding', 'sale-goats', 'view-sale-reports', 'buy-feeds']);
+        $admin->givePermissionTo(['manage-cages', 'manage-breeds', 'manage-goats', 'view-vaccine-records', 'view-weight-records', 'view-mating-records', 'feeding', 'sale-goats', 'view-sale-reports', 'buy-feeds', 'manage-milk']);
     }
 }
