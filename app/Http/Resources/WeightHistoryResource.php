@@ -16,7 +16,7 @@ class WeightHistoryResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'goat_code' => $this->goat?->code,
+            'goat_code' => new GoatResource($this->whenLoaded('goat')) ?? $this->goat_code,
             'weight' => $this->weight,
             'height' => $this->height,
             'date' => $this->date,

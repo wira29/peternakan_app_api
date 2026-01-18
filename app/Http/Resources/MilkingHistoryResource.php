@@ -15,9 +15,10 @@ class MilkingHistoryResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+
         return [
             'id' => $this->id,
-            'goat' => new GoatResource($this->goat),
+            'goat' => new GoatResource($this->whenLoaded('goat')),
             'qty' => $this->qty,
             'milked_at' => $this->milked_at,
             'created_at' => $this->created_at,

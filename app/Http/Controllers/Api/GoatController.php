@@ -78,7 +78,9 @@ class GoatController extends Controller
     public function show(string $code)
     {
         \Log::info("Fetching cow with ID: " . $code);
-        $goat = Goat::findOrFail($code);
+        $goat = Goat::with(['vaccineHistories', 'matingHistory', 'weightHistories', 'milkingHistories'])
+            ->where('code', $code)
+            ->firstOrFail();
         return $this->sendResponse(
             new GoatResource($goat),
             'Cow retrieved successfully.'
