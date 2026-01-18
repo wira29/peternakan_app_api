@@ -160,7 +160,7 @@ class MilkingHistoryController extends Controller
 
             \Log::info("Restored milking history record with ID: " . $milkingHistory->id);
             return $this->sendResponse(
-                MilkingHistoryResource::collection($milkingHistory),
+                new MilkingHistoryResource($milkingHistory),
                 'Milking history record restored successfully.'
             );
         }catch(\Exception $e){

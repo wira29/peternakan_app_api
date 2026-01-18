@@ -43,7 +43,7 @@ class MilkStock extends Model
             $this->qty -= $amount;
             $this->save();
         } else {
-            throw new \Exception('Insufficient stock to decrease.');
+            throw new \Exception("Stok susu tidak mencukupi. Tersedia: {$this->qty}, Diminta: {$amount}.");
         }
     }
 

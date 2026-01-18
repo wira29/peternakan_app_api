@@ -21,6 +21,7 @@ class MilkSaleResource extends JsonResource
             'qty' => $this->qty,
             'price_per_liter' => $this->price_per_liter,
             'total' => $this->total,
+            'remark' => $this->remark,
             'created_at' => $this->created_at,
             'created_by' => $this->createdBy?->name,
             'updated_at' => $this->updated_at,
