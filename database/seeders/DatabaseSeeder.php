@@ -38,6 +38,9 @@ class DatabaseSeeder extends Seeder
             WeightHistorySeeder::class,
             MatingHistorySeeder::class,
             SaleGoatSeeder::class,
+            MilkStockSeeder::class,
+            MilkSaleSeeder::class,
+            MilkingHistorySeeder::class,
         ]);
         
     }

@@ -116,5 +116,13 @@ Route::middleware('permission:sale-goats')->group(function () {
     Route::post('sale-goats/{id}/restore', [SaleGoatController::class, 'restore']);
 });
 
+Route::middleware('permission:manage-milk')->group(function () {
+    Route::apiResource('milk-sales', 'App\Http\Controllers\Api\MilkSaleController');
+    Route::post('milk-sales/{id}/restore', ['App\Http\Controllers\Api\MilkSaleController', 'restore']);
+    Route::apiResource('milking-histories', 'App\Http\Controllers\Api\MilkingHistoryController');
+    Route::post('milking-histories/{id}/restore', ['App\Http\Controllers\Api\MilkingHistoryController', 'restore']);
+    Route::apiResource('milk-stocks', 'App\Http\Controllers\Api\MilkStockController');
+    Route::post('milk-stocks/{id}/restore', ['App\Http\Controllers\Api\MilkStockController', 'restore']);
+});
 
 
