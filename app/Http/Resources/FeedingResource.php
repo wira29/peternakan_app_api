@@ -16,8 +16,10 @@ class FeedingResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'cage_id' => $this->cage?->name,
-            'feed_location_id' => $this->feedLocation?->name,
+            'cage_id' => $this->cage?->id,
+            'cage' => $this->cage?->name,
+            'feed_location_id' => $this->feedLocation?->id,
+            'feed_location' => $this->feedLocation?->name,
             'feed_unit' => $this->feedLocation?->unit,
             'qty' => $this->qty,
             'date' => $this->date,
