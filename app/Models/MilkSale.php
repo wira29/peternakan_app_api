@@ -46,7 +46,6 @@ class MilkSale extends Model
     public function sumTotal()
     {
         $this->total = $this->qty * $this->price_per_liter;
-        $this->save();
     }
 
     public function milkStock()
@@ -54,11 +53,21 @@ class MilkSale extends Model
         return $this->belongsTo(MilkStock::class);
     }
 
-    public function reduceMilkStock()
+    public function reduceMilkStock(string $locationId)
     {
-        $milkStock = MilkStock::first();
+        $milkStock = MilkStock::where('location_id', $locationId)->first();
         if ($milkStock) {
             $milkStock->decreaseStock($this->qty);
+        } else {
+            throw new \Exception('Milk stock record not found.');
+        }
+    }
+
+    public function restoreMilkStock()
+    {
+        $milkStock = MilkStock::where('location_id', $this->location_id)->first();
+        if ($milkStock) {
+            $milkStock->increaseStock($this->qty);
         } else {
             throw new \Exception('Milk stock record not found.');
         }

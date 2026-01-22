@@ -25,7 +25,7 @@ class MilkSaleController extends Controller
                 return $this->sendResponse([], 'No milk sale records found');
             }
             return $this->sendResponse(
-                MilkSale::collection($milkSales),
+                MilkSaleResource::collection($milkSales),
                 'Successfully retrieved milk sale records.'
             );
         } catch (\Exception $e) {
@@ -44,8 +44,10 @@ class MilkSaleController extends Controller
         try {
             $validated = $request->getData();
             DB::beginTransaction();
+            \Log::info('Data Request Create Milk Sale: ' . json_encode($validated));
             $milkSale = MilkSale::create($validated);
-            $milkSale->reduceMilkStock();
+            \Log::info('Milk Sale created with ID: ' . $milkSale->id);
+            $milkSale->reduceMilkStock($validated['location_id']);
             DB::commit();
             \Log::info("Created milk sale record with ID: " . $milkSale->id);
             return $this->sendResponse(
@@ -99,12 +101,12 @@ class MilkSaleController extends Controller
             
             \Log::info("Updated milk sale record with ID: " . $milkSale->id);
             return $this->sendResponse(
-                MilkSale::collection($milkSale),
+                new MilkSaleResource($milkSale),
                 'Milk sale record updated successfully.'
             );
         }catch(\Exception $e){
             \Log::error("Error updating milk sale record: " . $e->getMessage());
-            return $this->sendError('An error occurred while updating the milk sale record.', 500);
+            return $this->sendError($e->getMessage(), 500);
         }
     }
 
@@ -127,7 +129,7 @@ class MilkSaleController extends Controller
             );
         }catch(\Exception $e){
             \Log::error("Error deleting milk sale record: " . $e->getMessage());
-            return $this->sendError('An error occurred while deleting the milk sale record.', 500);
+            return $this->sendError($e->getMessage(), 500);
         }
         
     }
@@ -147,7 +149,7 @@ class MilkSaleController extends Controller
             );
         }catch(\Exception $e){
             \Log::error("Error restoring milk sale record: " . $e->getMessage());
-            return $this->sendError('An error occurred while restoring the milk sale record.', 500);
+            return $this->sendError($e->getMessage(), 500);
         }
     }
 }

@@ -19,7 +19,6 @@ class StoreMilkSaleRequest extends FormRequest
     {
         $this->merge([
             'location_id' => auth()->user()->location_id,
-            'qty' => (int) $this->qty,
             'created_by' => auth()->user()->id
         ]);
     }
@@ -35,7 +34,6 @@ class StoreMilkSaleRequest extends FormRequest
             'sale_date' => ['bail','required', 'date'],
             'qty' => ['bail','required', 'integer', 'min:0'],
             'price_per_liter' => ['bail','required', 'integer', 'min:0'],
-            'total' => ['bail','required', 'integer', 'min:0'],
             'remark' => ['bail','sometimes', 'string'],
             'created_by' => ['bail','required', 'exists:users,id'],
         ];
@@ -53,9 +51,6 @@ class StoreMilkSaleRequest extends FormRequest
             'price_per_liter.required' => 'Harga per liter harus diisi.',
             'price_per_liter.integer' => 'Harga per liter harus berupa angka.',
             'price_per_liter.min' => 'Harga per liter minimal 0.',
-            'total.required' => 'Total penjualan harus diisi.',
-            'total.integer' => 'Total penjualan harus berupa angka.',
-            'total.min' => 'Total penjualan minimal 0.',
             'created_by.required' => 'Pembuat harus diisi.',
             'created_by.exists' => 'Pembuat tidak ditemukan.',
             'remark.string' => 'Keterangan harus berupa teks.',
@@ -70,7 +65,6 @@ class StoreMilkSaleRequest extends FormRequest
             'sale_date',
             'qty',
             'price_per_liter',
-            'total',
             'remark',
             'created_by',
         ]);

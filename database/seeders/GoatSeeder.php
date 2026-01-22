@@ -28,7 +28,7 @@ class GoatSeeder extends Seeder
                 'origin'           => GoatOriginEnum::BUY->value,
                 'color'            => 'Merah Bata',
                 'gender'           => GoatGender::MALE->value,
-                'date_of_birth'    => '2022-06-15',
+                'date_of_purchase' => '2022-06-15',
                 'price'            => 22500000,
                 'female_condition' => null,
                 'is_breeder'       => 0,

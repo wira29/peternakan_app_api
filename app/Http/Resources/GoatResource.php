@@ -17,6 +17,7 @@ class GoatResource extends JsonResource
         $vaccineLimit = $request->input('limit_vaccine');
         $matingLimit  = $request->input('limit_mating');
         $weightLimit  = $request->input('limit_weight');
+        $milkingLimit  = $request->input('limit_milking');
 
         return [
             'code' => $this->code,
@@ -30,18 +31,32 @@ class GoatResource extends JsonResource
             'gender' => $this->gender?->value,
             'date_of_birth' => $this->date_of_birth,
             'date_of_purchase' => $this->date_of_purchase,
-            'price' => $this->price,    
+            'price' => $this->price,
             'is_breeder' => $this->is_breeder ? true : false,
             'is_qurbani' => $this->is_qurbani ? true : false,
             'remarks' => $this->remarks,
             'vaccines' => VaccineHistoryResource::collection(
-                $vaccineLimit ? $this->vaccineHistories->take((int)$vaccineLimit) : $this->vaccineHistories
+                $this->whenLoaded('vaccineHistories', function () use ($vaccineLimit) {
+                    return $vaccineLimit ? $this->vaccineHistories->take((int)$vaccineLimit) : $this->vaccineHistories;
+                })
             ),
             'mating_history' => MatingHistoryResource::collection(
-                $matingLimit ? $this->matingHistory->take((int)$matingLimit) : $this->matingHistory
+                $this->whenLoaded('matingHistory', function () use ($matingLimit) {
+                    return $matingLimit ? $this->matingHistory->take((int)$matingLimit) : $this->matingHistory;
+                })
             ),
             'weight_history' => WeightHistoryResource::collection(
-                $weightLimit ? $this->weightHistories->take((int)$weightLimit) : $this->weightHistories
+                $this->whenLoaded(
+                    'weightHistories',
+                    function () use ($weightLimit) {
+                        return $weightLimit ? $this->weightHistories->take((int)$weightLimit) : $this->weightHistories;
+                    }
+                )
+            ),
+            'milked_histories' => MilkingHistoryResource::collection(
+                $this->whenLoaded('milkingHistories', function () use ($milkingLimit) {
+                    return $milkingLimit ? $this->milkingHistories->take((int)$milkingLimit) : $this->milkingHistories;
+                })
             ),
             'created_by' => $this->createdBy?->name,
             'updated_by' => $this->updatedBy?->name,
@@ -49,4 +64,3 @@ class GoatResource extends JsonResource
         ];
     }
 }
-

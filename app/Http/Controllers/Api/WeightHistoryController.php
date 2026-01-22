@@ -58,18 +58,19 @@ class WeightHistoryController extends Controller
     public function show(string $id)
     {
         try {
-            $weightHistory = WeightHistory::findOrFail($id);
+            $weightHistory = WeightHistory::with('goat')->where('id', $id)->firstOrFail();
+            if (!$weightHistory) {
+                \Log::warning("Weight history record not found with ID: " . $id);
+                return $this->sendError('Weight history record not found.', 404);
+            }
             \Log::info("Fetched weight history record with ID: " . $weightHistory->id);
             return $this->sendResponse(
                 new WeightHistoryResource($weightHistory),
                 'Successfully retrieved weight history record.'
             );
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            \Log::warning("Weight history record not found with ID: " . $id);
-            return $this->sendError('Weight history record not found.', [], 404);
         } catch (\Exception $e) {
             \Log::error("Error fetching weight history record: " . $e->getMessage());
-            return $this->sendError('An error occurred while retrieving the weight history record.', [], 500);
+            return $this->sendError($e->getMessage(), 500);
         }
     }
 

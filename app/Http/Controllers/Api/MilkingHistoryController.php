@@ -21,7 +21,7 @@ class MilkingHistoryController extends Controller
     public function index()
     {
         try {
-            $histories = MilkingHistory::all();
+            $histories = MilkingHistory::with('goat')->get();
             if ($histories->isEmpty()) {
                 return $this->sendResponse([], 'No milking history records found');
             }
@@ -73,7 +73,7 @@ class MilkingHistoryController extends Controller
     public function show(string $id)
     {
         try {
-            $milkingHistory = MilkingHistory::findOrFail($id);
+            $milkingHistory = MilkingHistory::with('goat')->findOrFail($id);
             \Log::info("Fetched milking history record with ID: " . $milkingHistory->id);
             return $this->sendResponse(
                 new MilkingHistoryResource($milkingHistory),
@@ -160,7 +160,7 @@ class MilkingHistoryController extends Controller
 
             \Log::info("Restored milking history record with ID: " . $milkingHistory->id);
             return $this->sendResponse(
-                MilkingHistoryResource::collection($milkingHistory),
+                new MilkingHistoryResource($milkingHistory),
                 'Milking history record restored successfully.'
             );
         }catch(\Exception $e){

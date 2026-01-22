@@ -109,6 +109,10 @@ class Goat extends Model
         }
     }
 
+    public function milkingHistories(){
+        return $this->hasMany(MilkingHistory::class, 'goat_code', 'code');
+    }
+
     public function availableGoats(){
         return $this->where('status', 'available');
     }
