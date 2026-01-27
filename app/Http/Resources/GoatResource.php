@@ -14,10 +14,10 @@ class GoatResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $vaccineLimit = $request->input('limit_vaccine');
-        $matingLimit  = $request->input('limit_mating');
-        $weightLimit  = $request->input('limit_weight');
-        $milkingLimit  = $request->input('limit_milking');
+        $vaccineLimit = $request->input('limit_vaccine', 5);
+        $matingLimit  = $request->input('limit_mating', 5);
+        $weightLimit  = $request->input('limit_weight', 5);
+        $milkingLimit  = $request->input('limit_milking', 5);
 
         return [
             'code' => $this->code,

@@ -26,7 +26,7 @@ class GoatController extends Controller
 
 
         $goats = Goat::withoutTrashed()
-            ->with(['breed', 'cage', 'father', 'mother', 'createdBy', 'updatedBy'])
+            ->with(['breed', 'cage', 'father', 'mother', 'createdBy', 'updatedBy', 'vaccineHistories', 'matingHistory', 'weightHistories', 'milkingHistories'])
             ->latest("updated_at")
             ->when(request('status'), function ($query, $status) {
                 $query->where('status', $status);
