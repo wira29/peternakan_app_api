@@ -51,7 +51,6 @@ class GoatController extends Controller
      */
     public function store(StoreGoatRequest $request)
     {
-        dd($request->getData());
         $validated = $request->getData();
         \Log::info("Data to create cow: " . json_encode($validated));
         try {
