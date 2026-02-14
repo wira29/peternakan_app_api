@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\FeedingController;
 use App\Http\Controllers\Api\FeedLocationController;
 use App\Http\Controllers\Api\FeedPurchaseController;
 use App\Http\Controllers\Api\MatingHistoryController;
+use App\Http\Controllers\Api\OwnerDashboardController;
 use App\Http\Controllers\Api\SaleGoatController;
 use App\Http\Controllers\Api\VaccineController;
 use App\Http\Controllers\Api\VaccineHistoryController;
@@ -125,4 +126,8 @@ Route::middleware('permission:manage-milk')->group(function () {
     Route::post('milk-stocks/{id}/restore', ['App\Http\Controllers\Api\MilkStockController', 'restore']);
 });
 
+
+Route::middleware('role:owner')->group(function () {
+    Route::get('/owner/dashboard', [OwnerDashboardController::class, 'index']);
+});
 
