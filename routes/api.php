@@ -129,5 +129,8 @@ Route::middleware('permission:manage-milk')->group(function () {
 
 Route::middleware('role:owner')->group(function () {
     Route::get('/owner/dashboard', [OwnerDashboardController::class, 'index']);
+    Route::get('/owner/report/sales', [OwnerDashboardController::class, 'reportSales']);
+    Route::get('/owner/report/purchases', [OwnerDashboardController::class, 'reportPurchasesCows']);
+    Route::get('/owner/report/milk-sales', [OwnerDashboardController::class, 'reportMilkSales']);
 });
 
