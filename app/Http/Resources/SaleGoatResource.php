@@ -17,6 +17,7 @@ class SaleGoatResource extends JsonResource
         return [
             'id' => $this->id,
             'goat_id' => $this->goat?->code,
+            'goat' => $this->goat ? new GoatResource($this->goat) : null,
             'date' => $this->date,
             'price' => $this->price,
             'remark' => $this->remark,

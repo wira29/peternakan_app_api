@@ -95,8 +95,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/owner/dashboard', [OwnerDashboardController::class, 'index']);
     Route::get('/owner/report/sales', [OwnerDashboardController::class, 'reportSales']);
+    Route::get('/owner/report/sales-export', [OwnerDashboardController::class, 'reportSalesExport']);
     Route::get('/owner/report/purchases', [OwnerDashboardController::class, 'reportPurchasesCows']);
+    Route::get('/owner/report/purchases-export', [OwnerDashboardController::class, 'reportPurchasesCowsExport']);
     Route::get('/owner/report/milk-sales', [OwnerDashboardController::class, 'reportMilkSales']);
+    Route::get('/owner/report/milk-sales-export', [OwnerDashboardController::class, 'reportMilkSalesExport']);
 });
 
 // Route::middleware('permission:manage-users')->group(function () {
