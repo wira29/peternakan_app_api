@@ -72,7 +72,7 @@ class CageController extends Controller
             \Log::error("Error fetching cage: " . $e->getMessage());
             return $this->sendError($e->getMessage(), $e->getCode() ?: 500);
         }
-        
+
         return $this->sendResponse(new CageResource($cage), 'Cage retrieved successfully');
     }
 
@@ -130,5 +130,17 @@ class CageController extends Controller
             \Log::error("Error restoring cage with ID $id: " . $e->getMessage());
             return $this->sendError($e->getMessage(), $e->getCode() ?: 500);
         }
+    }
+
+    public function getByLocation(string $location)
+    {
+        \Log::info("Fetching cages by location: " . $location);
+        try {
+            $cages = Cage::where('location', $location)->with('createdby', 'updatedby', 'deletedby')->get();
+        } catch (\Exception $e) {
+            \Log::error("Error fetching cages by location: " . $e->getMessage());
+            return $this->sendError($e->getMessage(), $e->getCode() ?: 500);
+        }
+        return $this->sendResponse(CageResource::collection($cages), 'Cages retrieved successfully');
     }
 }

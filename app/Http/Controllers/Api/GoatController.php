@@ -155,4 +155,16 @@ class GoatController extends Controller
             'Successfully restored cow'
         );
     }
+
+    public function getByLocation(string $location)
+    {
+        \Log::info("Fetching goats by location: " . $location);
+        try {
+            $goats = Goat::where('location', $location)->with(['breed', 'cage', 'father', 'mother', 'createdBy', 'updatedBy', 'vaccineHistories', 'matingHistory', 'weightHistories', 'milkingHistories'])->get();
+        } catch (\Exception $e) {
+            \Log::error("Error fetching goats by location: " . $e->getMessage());
+            return $this->sendError($e->getMessage(), $e->getCode() ?: 500);
+        }
+        return $this->sendResponse(GoatResource::collection($goats), 'Goats retrieved successfully');
+    }
 }

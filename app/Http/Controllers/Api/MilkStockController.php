@@ -129,4 +129,23 @@ class MilkStockController extends Controller
             return $this->sendError('An error occurred while restoring the milk stock record.', 500);
         }
     }
+
+    public function getByLocation(string $location)
+    {
+        \Log::info("Fetching milk stock records by location: " . $location);
+        try{
+            $stocks = MilkStock::where('location', $location)->get();
+            if($stocks->isEmpty()){
+                return $this->sendResponse([], 'No milk stock records found');
+            }
+            \Log::info("Fetched " . $stocks->count() . " milk stock records.");
+            return $this->sendResponse(
+                MilkStockResource::collection($stocks),
+                'Successfully retrieved milk stock records.'
+            );
+        }catch(\Exception $e){
+            \Log::error("Error fetching milk stock records by location: " . $e->getMessage());
+            return $this->sendError('An error occurred while retrieving milk stock records.', 500);
+        }
+    }
 }
