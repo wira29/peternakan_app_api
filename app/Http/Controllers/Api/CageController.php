@@ -16,7 +16,7 @@ class CageController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:manage-cages');
+        // $this->middleware('permission:manage-cages');
     }
     /**
      * Display a listing of the resource.

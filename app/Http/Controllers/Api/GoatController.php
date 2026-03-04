@@ -15,7 +15,7 @@ class GoatController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:manage-goats');
+        // $this->middleware('permission:manage-goats');
     }
     /**
      * Display a listing of the resource.
