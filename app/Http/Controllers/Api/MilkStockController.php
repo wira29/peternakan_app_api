@@ -134,7 +134,7 @@ class MilkStockController extends Controller
     {
         \Log::info("Fetching milk stock records by location: " . $location);
         try{
-            $stocks = MilkStock::where('location', $location)->get();
+            $stocks = MilkStock::where('location_id', $location)->get();
             if($stocks->isEmpty()){
                 return $this->sendResponse([], 'No milk stock records found');
             }

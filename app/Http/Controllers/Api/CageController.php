@@ -136,7 +136,7 @@ class CageController extends Controller
     {
         \Log::info("Fetching cages by location: " . $location);
         try {
-            $cages = Cage::where('location', $location)->with('createdby', 'updatedby', 'deletedby')->get();
+            $cages = Cage::where('location_id', $location)->with('createdby', 'updatedby', 'deletedby')->get();
         } catch (\Exception $e) {
             \Log::error("Error fetching cages by location: " . $e->getMessage());
             return $this->sendError($e->getMessage(), $e->getCode() ?: 500);
